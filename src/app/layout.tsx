@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
     title: {
         template: "%s | Social Media App",
-        default: "Social Media App"
+        default: "Social Media App",
     },
 };
 
