@@ -1,2 +1,19 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Color Scheme */
+
+:root {
+    --clr-background: var(--color-white);
+}
+
+.dark {
+    --clr-background: var(--color-neutral-900);
+}
+
+/* Theme */
+
+@theme {
+    --color-main: var(--clr-background);
+}
