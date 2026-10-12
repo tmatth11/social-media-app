@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Color Scheme */
+
+:root {
+    --clr-background: var(--color-white);
+    --clr-navbar: var(--color-neutral-200);
+    --clr-link-hover: var(--color-gray-400);
+}
+
+.dark {
+    --clr-background: var(--color-neutral-900);
+    --clr-navbar: var(--color-black);
+    --clr-link-hover: var(--color-gray-400);
+}
+
+/* Theme */
+
+@theme {
+    --color-main: var(--clr-background);
+    --color-navbar: var(--clr-navbar);
+    --color-link-hover: var(--clr-link-hover);
+}
+
+/* Buttons */
+
+.mode-toggle {
+    @apply h-[1.2rem] w-[1.2rem];
+}
+
+/* Links */
+
+.nav-link {
+    @apply flex items-center gap-2 hover:text-link-hover;
+}
+
+/* Custom Focus Outline */
+
+*:focus-visible {
+    outline: none;
+}
+
+*:focus-visible {
+    @apply outline-2 dark:outline-white outline-yellow-700;
+}
