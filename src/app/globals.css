@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../src/**/*.{js,ts,jsx,tsx,mdx}";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -6,25 +7,94 @@
 
 :root {
     --clr-background: var(--color-white);
+    --clr-btn-secondary: var(--color-neutral-700);
+    --clr-btn-secondary-hover: var(--color-neutral-600);
     --clr-navbar: var(--color-neutral-200);
     --clr-link-hover: var(--color-gray-400);
+    --clr-container-primary: var(--color-neutral-200);
+    --clr-text-input: var(--color-neutral-300);
+
 }
 
 .dark {
     --clr-background: var(--color-neutral-900);
+    --clr-btn-secondary: var(--color-slate-900);
+    --clr-btn-secondary-hover: var(--color-slate-800);
     --clr-navbar: var(--color-black);
     --clr-link-hover: var(--color-gray-400);
+    --clr-container-primary: var(--color-slate-700);
+    --clr-text-input: var(--color-slate-800);
 }
 
 /* Theme */
 
 @theme {
     --color-main: var(--clr-background);
+    --color-btn-primary: var(--color-blue-700);
+    --color-btn-primary-hover: var(--color-blue-600);
+    --color-btn-secondary: var(--clr-btn-secondary);
+    --color-btn-secondary-hover: var(--clr-btn-secondary-hover);
+    --color-btn-destructive: var(--color-red-600);
+    --color-btn-destructive-hover: var(--color-red-500);
     --color-navbar: var(--clr-navbar);
     --color-link-hover: var(--clr-link-hover);
+    --color-container-primary: var(--clr-container-primary);
+    --color-text-input: var(--clr-text-input);
+}
+
+/* Headings */
+
+h1 {
+    @apply text-3xl font-semibold;
+}
+
+h2 {
+    @apply text-2xl font-semibold;
+}
+
+h3 {
+    @apply text-xl font-semibold;
+}
+
+h4 {
+    @apply text-lg font-semibold;
+}
+
+/* Form Elements */
+
+.form-group {
+    @apply mt-4 flex flex-col gap-2;
+}
+
+.form-label {
+    @apply font-semibold;
+}
+
+.form-input {
+    @apply rounded-md p-2 bg-text-input;
+}
+
+.form-error {
+    @apply text-red-500 wrap-break-word;
 }
 
 /* Buttons */
+
+.btn {
+    @apply p-2 rounded-md text-center font-semibold enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-75;
+}
+
+.btn-primary {
+    @apply bg-btn-primary hover:bg-btn-primary-hover disabled:hover:bg-btn-primary text-white;
+}
+
+.btn-secondary {
+    @apply bg-btn-secondary hover:bg-btn-secondary-hover disabled:hover:bg-btn-secondary text-white;
+}
+
+.btn-destructive {
+    @apply bg-btn-destructive hover:bg-btn-destructive-hover disabled:hover:bg-btn-destructive text-white;
+}
 
 .mode-toggle {
     @apply h-[1.2rem] w-[1.2rem];
