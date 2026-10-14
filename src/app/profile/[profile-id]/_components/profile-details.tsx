@@ -15,6 +15,7 @@ export default function ProfileDetails({ profileId }: { profileId: string }) {
             try {
                 setLoading(true);
                 const data = await getProfile(profileId);
+                
                 setProfile(data);
             } 
             catch (err: unknown) {
