@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@source "../src/**/*.{js,ts,jsx,tsx,mdx}";
+@source "./**/*.{js,ts,jsx,tsx,mdx}";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -40,6 +40,7 @@
     --color-link-hover: var(--clr-link-hover);
     --color-container-primary: var(--clr-container-primary);
     --color-text-input: var(--clr-text-input);
+    --color-error: var(--color-red-500);
 }
 
 /* Headings */

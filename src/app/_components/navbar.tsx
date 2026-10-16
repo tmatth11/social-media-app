@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import {
     CircleArrowRight,
     CircleArrowUp,
+    LogOut,
     Menu,
     Newspaper,
     User,
@@ -73,7 +74,7 @@ export default function Navbar() {
                                 onClick={handleSignOut}
                             >
                                 <div className="nav-link">
-                                    <User />
+                                    <LogOut />
                                     <span>Log Out</span>
                                 </div>
                             </button>
@@ -156,7 +157,7 @@ export default function Navbar() {
                             }}
                         >
                             <div className="nav-link">
-                                <User />
+                                <LogOut />
                                 <span>Log Out</span>
                             </div>
                         </button>
