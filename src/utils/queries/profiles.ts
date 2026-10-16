@@ -1,6 +1,7 @@
 import { createClient } from "@/services/supabase/server";
+import { cache } from "react";
 
-export async function getProfile(profileId: string) {
+export const getProfile = cache(async (profileId: string) => {
     const supabase = await createClient();
 
     // Get profile based on provided profile ID
@@ -26,4 +27,4 @@ export async function getProfile(profileId: string) {
     }
 
     return { data: profile, error: null };
-}
+});
