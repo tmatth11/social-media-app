@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react";
 import { useEffect } from "react";
+import EditProfileForm from "./edit-profile-form";
 
 export default function EditProfileModal({
     isOpen,
@@ -47,7 +48,7 @@ export default function EditProfileModal({
                         form below.
                     </p>
                 </div>
-                
+                <EditProfileForm />
             </div>
         </div>
     );

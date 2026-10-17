@@ -1,37 +1,11 @@
 import { ProfilePageProps } from "@/types";
-import { notFound } from "next/navigation";
-import z from "zod";
-import { cache } from "react";
-import { getProfile } from "@/utils/queries/profiles";
 import { connection } from "next/server";
 import ProfileDetails from "./_components/profile-details";
 import Feed from "@/app/_components/feed";
 import { createClient } from "@/services/supabase/server";
+import { getCachedProfile } from "@/utils/helpers";
 
 export const instant = false;
-
-const IdParamSchema = z.coerce.string().pipe(z.uuid());
-
-const getCachedProfile = cache(
-    async (paramsPromise: ProfilePageProps["params"]) => {
-        const resolvedParams = await paramsPromise;
-        const result = IdParamSchema.safeParse(resolvedParams["profile-id"]);
-
-        if (!result.success) {
-            notFound();
-        }
-
-        const profileId = result.data;
-
-        const { data: profile, error } = await getProfile(profileId);
-
-        if (error || !profile) {
-            notFound();
-        }
-
-        return profile;
-    },
-);
 
 export async function generateMetadata({ params }: ProfilePageProps) {
     await connection();
