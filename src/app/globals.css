@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@source "./**/*.{js,ts,jsx,tsx,mdx}";
+@source "../app/**/*.{ts,tsx}";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -10,7 +10,7 @@
     --clr-btn-secondary: var(--color-neutral-700);
     --clr-btn-secondary-hover: var(--color-neutral-600);
     --clr-navbar: var(--color-neutral-400);
-    --clr-link-hover: var(--color-gray-400);
+    --clr-link-hover: var(--color-gray-200);
     --clr-container-primary: var(--color-neutral-200);
     --clr-text-input: var(--color-neutral-300);
 
@@ -99,6 +99,10 @@ h4 {
 
 .mode-toggle {
     @apply h-[1.2rem] w-[1.2rem];
+}
+
+.red-icon {
+    @apply cursor-pointer enabled:hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 /* Links */

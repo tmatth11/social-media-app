@@ -1,5 +1,6 @@
 import { Profile } from "@/types";
 import Image from "next/image";
+import EditProfileModalWrapper from "./edit-profile-modal-wrapper";
 
 export default function ProfileDetails({
     profile,
@@ -24,11 +25,8 @@ export default function ProfileDetails({
                 <p>@{profile.username}</p>
             </div>
             {isOwner && 
-                <button className="btn btn-primary">
-                    Edit Profile
-                </button>
+                <EditProfileModalWrapper />
             }
-            
         </div>
     );
 }
