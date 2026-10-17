@@ -3,11 +3,14 @@
 import { X } from "lucide-react";
 import { useEffect } from "react";
 import EditProfileForm from "./edit-profile-form";
+import { Profile } from "@/types";
 
 export default function EditProfileModal({
+    profile,
     isOpen,
     onClose,
 }: {
+    profile: Profile;
     isOpen: boolean;
     onClose: () => void;
 }) {
@@ -48,7 +51,7 @@ export default function EditProfileModal({
                         form below.
                     </p>
                 </div>
-                <EditProfileForm />
+                <EditProfileForm profile={profile} />
             </div>
         </div>
     );

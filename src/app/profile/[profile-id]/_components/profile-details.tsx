@@ -26,7 +26,7 @@ export default function ProfileDetails({
                 <p>@{profile.username}</p>
             </div>
             {isOwner && 
-                <EditProfileModalWrapper />
+                <EditProfileModalWrapper profile={profile} />
             }
         </div>
     );

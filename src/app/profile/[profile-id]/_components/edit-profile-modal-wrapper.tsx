@@ -2,8 +2,13 @@
 
 import { useState } from "react";
 import EditProfileModal from "./edit-profile-modal";
+import { Profile } from "@/types";
 
-export default function EditProfileModalWrapper() {
+export default function EditProfileModalWrapper({
+    profile,
+}: {
+    profile: Profile;
+}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
@@ -15,6 +20,7 @@ export default function EditProfileModalWrapper() {
                 Edit Profile
             </button>
             <EditProfileModal
+                profile={profile}
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
             />
