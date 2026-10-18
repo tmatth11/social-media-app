@@ -2,7 +2,7 @@
 "use client";
 
 import { createClient } from "@/services/supabase/client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 export default function AvatarUpload({
@@ -18,34 +18,54 @@ export default function AvatarUpload({
     const [uploading, setUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const supabase = createClient();
-
-    async function downloadImage(path: string) {
-        try {
-            const { data, error } = await supabase.storage
-                .from("avatars")
-                .download(path);
-            if (error) {
-                throw error;
-            }
-
-            const url = URL.createObjectURL(data);
-            setAvatarUrl(url);
-        } catch (error) {
-            const errorMessage =
-                error instanceof Error
-                    ? error.message
-                    : "An unknown database error occurred";
-
-            console.error("Error downloading image:", errorMessage);
-        }
-    }
+    const supabase = useMemo(() => createClient(), []);
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        if (url) downloadImage(url);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [url]);
+        let objectUrl: string | null = null;
+        let cancelled = false;
+
+        async function downloadImage(path: string) {
+            try {
+                const { data, error } = await supabase.storage
+                    .from("avatars")
+                    .download(path);
+
+                if (error) {
+                    throw error;
+                }
+
+                objectUrl = URL.createObjectURL(data);
+
+                if (cancelled) {
+                    URL.revokeObjectURL(objectUrl);
+                    return;
+                }
+
+                setAvatarUrl(objectUrl);
+            } catch (error) {
+                const errorMessage =
+                    error instanceof Error
+                        ? error.message
+                        : "An unknown database error occurred";
+
+                if (!cancelled) {
+                    console.error("Error downloading image:", errorMessage);
+                }
+            }
+        }
+
+        if (url) {
+            void downloadImage(url);
+        }
+
+        return () => {
+            cancelled = true;
+
+            if (objectUrl) {
+                URL.revokeObjectURL(objectUrl);
+            }
+        };
+    }, [url, supabase]);
 
     async function uploadAvatar(event: React.ChangeEvent<HTMLInputElement>) {
         try {
@@ -57,12 +77,14 @@ export default function AvatarUpload({
 
             const file = event.target.files[0];
             const fileExt = file.name.split(".").pop();
-            const fileName = `${profileId}.${fileExt}`;
+
+            // Use a unique path so an unsaved upload never overwrites the currently saved profile picture.
+            const fileName = `${crypto.randomUUID()}.${fileExt}`;
             const filePath = `${profileId}/${fileName}`;
 
             const { error: uploadError } = await supabase.storage
                 .from("avatars")
-                .upload(filePath, file, { upsert: true });
+                .upload(filePath, file);
 
             if (uploadError) {
                 throw uploadError;
@@ -86,11 +108,12 @@ export default function AvatarUpload({
         <div className="flex flex-col items-center">
             <p className="font-semibold">Profile Picture</p>
             <Image
-                className="rounded-full my-2"
+                className="my-2 rounded-full"
                 src={avatarUrl ? avatarUrl : "/blank-user.png"}
                 alt="User avatar"
                 width="100"
                 height="100"
+                unoptimized={avatarUrl?.startsWith("blob:")}
             />
             <button
                 type="button"
@@ -100,7 +123,6 @@ export default function AvatarUpload({
             >
                 {uploading ? "Uploading..." : "Upload Avatar"}
             </button>
-
             <input
                 ref={fileInputRef}
                 type="file"
