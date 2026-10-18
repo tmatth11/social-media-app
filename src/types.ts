@@ -11,6 +11,7 @@ export interface Profile {
     username: string;
     display_name: string;
     avatar_url: string | null;
+    updated_at: string;
 }
 
 export interface EditProfileState {
