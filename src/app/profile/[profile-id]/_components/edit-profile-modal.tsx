@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { useActionState, useEffect, useState } from "react";
 import { EditProfileState, Profile } from "@/types";
 import { editProfile } from "@/actions/profile-actions";
+import AvatarUpload from "./avatar-upload";
 
 const initialState: EditProfileState = {};
 
@@ -48,7 +49,10 @@ export default function EditProfileModal({
 
     return (
         <div className="fixed inset-0 z-50 flex justify-center bg-black/50 p-4">
-            <div key={`${profile.id}-${isOpen}`} className="bg-container-primary flex h-fit w-full max-w-md flex-col rounded-lg p-4 shadow-xl">
+            <div
+                key={`${profile.id}-${isOpen}`}
+                className="bg-container-primary flex h-fit w-full max-w-md flex-col rounded-lg p-4 shadow-xl"
+            >
                 <div className="flex justify-end">
                     <button
                         type="button"
@@ -74,7 +78,18 @@ export default function EditProfileModal({
                         name="avatar-url"
                         value={avatarUrl || ""}
                     />
-                    <p className="mb-4">AvatarUpload placeholder</p>
+                    <input
+                        type="hidden"
+                        name="avatar-url"
+                        value={avatarUrl || ""}
+                    />
+                    <AvatarUpload
+                        profileId={profile.id}
+                        url={avatarUrl}
+                        onUpload={(event, filePath) => {
+                            setAvatarUrl(filePath);
+                        }}
+                    />
                     <div className="form-group">
                         {/* Display name input */}
                         <label className="form-group">
@@ -97,7 +112,7 @@ export default function EditProfileModal({
                         )}
                     </div>
                     <button
-                        className="btn btn-primary mt-4"
+                        className="btn btn-primary"
                         type="submit"
                         disabled={isPending || displayName.trim() === ""}
                     >
