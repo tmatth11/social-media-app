@@ -16,14 +16,18 @@ export default function AvatarUpload({
 }) {
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [uploading, setUploading] = useState(false);
+
+    // References the file input element
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    // Initializes supabase client exactly once
     const supabase = useMemo(() => createClient(), []);
 
     useEffect(() => {
         let objectUrl: string | null = null;
         let cancelled = false;
 
+        // Download image from avatar bucket and set avatar URL
         async function downloadImage(path: string) {
             try {
                 const { data, error } = await supabase.storage
@@ -78,7 +82,7 @@ export default function AvatarUpload({
             const file = event.target.files[0];
             const fileExt = file.name.split(".").pop();
 
-            // Use a unique path so an unsaved upload never overwrites the currently saved profile picture.
+            // Recommended by Supabase to upload to a new path every time
             const fileName = `${crypto.randomUUID()}.${fileExt}`;
             const filePath = `${profileId}/${fileName}`;
 

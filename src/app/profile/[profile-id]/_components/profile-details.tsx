@@ -21,8 +21,6 @@ export default async function ProfileDetails({
         ? `${baseAvatarUrl}?t=${new Date(profile.updated_at).getTime()}`
         : "/blank-user.png";
 
-    console.log("avatarSrc =", avatarSrc);
-
     return (
         <div className="flex flex-col items-center gap-2 p-4">
             <Image
