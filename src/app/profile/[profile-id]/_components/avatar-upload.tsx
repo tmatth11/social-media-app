@@ -4,6 +4,8 @@ export default function AvatarUpload({ url, onUpload }: {
     url: string;
     onUpload: (event: Event, url: string) => void
 }) {
+    
+
     return (
         <>
             <p>AvatarUpload works!</p>

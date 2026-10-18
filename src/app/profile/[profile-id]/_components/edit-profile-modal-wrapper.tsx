@@ -20,6 +20,7 @@ export default function EditProfileModalWrapper({
                 Edit Profile
             </button>
             <EditProfileModal
+                key={`${profile.id}-${isModalOpen}`}
                 profile={profile}
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
