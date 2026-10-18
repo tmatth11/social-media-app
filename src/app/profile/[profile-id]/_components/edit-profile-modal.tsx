@@ -78,11 +78,6 @@ export default function EditProfileModal({
                         name="avatar-url"
                         value={avatarUrl || ""}
                     />
-                    <input
-                        type="hidden"
-                        name="avatar-url"
-                        value={avatarUrl || ""}
-                    />
                     <AvatarUpload
                         profileId={profile.id}
                         url={avatarUrl}
