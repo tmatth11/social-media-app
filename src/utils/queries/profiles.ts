@@ -1,30 +1,30 @@
-"use client";
+import { createClient } from "@/services/supabase/server";
+import { cache } from "react";
 
-import { createClient } from "@/services/supabase/client";
-
-export async function getProfile(profileId: string) {
-    const supabase = createClient();
+export const getProfile = cache(async (profileId: string) => {
+    const supabase = await createClient();
 
     // Get profile based on provided profile ID
     const { data: profile, error } = await supabase
         .from("profiles")
-        .select("username, display_name, avatar_url")
+        .select("id, username, display_name, avatar_url, updated_at")
         .eq("id", profileId)
         .single();
-    
-    // Throw error if error has occured
+
+    // Return error if error has occured
     if (error) {
         console.error("Error:", error);
 
-        throw error;
+        return { data: null, error };
     }
 
     // Return null if no profile has been found
     if (profile == null) {
-        console.error("Error: No profile has been found.");
-        
-        return null;
+        const errorMessage = "Error: No profile has been found.";
+        console.error(errorMessage);
+
+        return { data: null, error: errorMessage };
     }
 
-    return profile;
-}
+    return { data: profile, error: null };
+});

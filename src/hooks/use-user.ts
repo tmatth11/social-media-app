@@ -6,7 +6,6 @@ export function useUser() {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
-    
     useEffect(() => {
         const supabase = createClient();
 

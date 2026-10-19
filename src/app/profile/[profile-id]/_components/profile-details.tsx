@@ -1,53 +1,41 @@
-"use client";
-
 import { Profile } from "@/types";
-import { getProfile } from "@/utils/queries/profiles";
-import { notFound } from "next/navigation";
-import { useEffect, useState } from "react";
+import Image from "next/image";
+import EditProfileModalWrapper from "./edit-profile-modal-wrapper";
+import { createClient } from "@/services/supabase/server";
 
-export default function ProfileDetails({ profileId }: { profileId: string }) {
-    const [profile, setProfile] = useState<Profile | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+export default async function ProfileDetails({
+    profile,
+    isOwner,
+}: {
+    profile: Profile;
+    isOwner: boolean;
+}) {
+    const supabase = await createClient();
 
-    useEffect(() => {
-        async function loadProfile() {
-            try {
-                setLoading(true);
-                const data = await getProfile(profileId);
-                
-                setProfile(data);
-            } 
-            catch (err: unknown) {
-                const message =
-                    err instanceof Error
-                        ? err.message
-                        : "An unexpected error occurred";
-                setError(message);
-            } 
-            finally {
-                setLoading(false);
-            }
-        }
+    const baseAvatarUrl = profile.avatar_url
+        ? supabase.storage.from("avatars").getPublicUrl(profile.avatar_url).data
+            .publicUrl
+        : null;
 
-        loadProfile();
-    }, [profileId]);
-
-    if (loading) {
-        return <p>Loading profile details...</p>
-    }
-
-    if (error) {
-        return <p>Error loading profile: {error}</p>
-    }
-
-    if (!profile) {
-        return notFound();
-    }
+    const avatarSrc = baseAvatarUrl
+        ? `${baseAvatarUrl}?t=${new Date(profile.updated_at).getTime()}`
+        : "/blank-user.png";
 
     return (
-        <>
-            <p>Username: {profile.username}</p>
-        </>
+        <div className="flex flex-col items-center gap-2 p-4">
+            <Image
+                unoptimized
+                className="rounded-full"
+                src={avatarSrc}
+                alt={`${profile.username}'s profile picture`}
+                width="100"
+                height="100"
+            />
+            <div>
+                <h3>{profile.display_name}</h3>
+                <p>@{profile.username}</p>
+            </div>
+            {isOwner && <EditProfileModalWrapper profile={profile} />}
+        </div>
     );
 }
