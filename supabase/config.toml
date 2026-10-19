@@ -7,6 +7,9 @@ project_id = "social-media-app"
 [storage.buckets.avatars]
 public = true
 
+[storage.buckets.post_images]
+public = true
+
 [api]
 enabled = true
 # Port to use for the API URL.

@@ -82,7 +82,7 @@ export default function EditProfileModal({
                         key={`${profile.id}-${isOpen}`}
                         profileId={profile.id}
                         url={avatarUrl}
-                        onUpload={(event, filePath) => {
+                        onUpload={(_event, filePath) => {
                             setAvatarUrl(filePath);
                         }}
                     />
