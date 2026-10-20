@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import CreatePostModal from "./create-post-modal";
+import CreatePostModal from "./create-edit-post-modal";
 
-export default function CreatePostModalWrapper() {
+export default function CreatePostModalWrapper({}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
