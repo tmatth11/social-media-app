@@ -19,3 +19,9 @@ export interface EditProfileState {
     success?: boolean;
     errors?: ReturnType<typeof z.treeifyError>;
 }
+
+export interface CreatePostState {
+    message?: string;
+    success?: boolean;
+    errors?: ReturnType<typeof z.treeifyError>;
+}

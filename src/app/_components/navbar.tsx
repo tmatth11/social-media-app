@@ -37,7 +37,7 @@ export default function Navbar() {
                 <Link
                     href="/"
                     className="hover:text-link-hover cursor-pointer text-2xl font-semibold"
-                    onClick={() => setIsLinksOpen(!isLinksOpen)}
+                    onClick={() => setIsLinksOpen(false)}
                 >
                     Social Media App
                 </Link>
@@ -120,7 +120,7 @@ export default function Navbar() {
             <nav
                 className={`${isLinksOpen ? "flex" : "hidden"} flex-col gap-4 p-4 md:hidden`}
             >
-                <Link href="/feed" onClick={() => setIsLinksOpen(!isLinksOpen)}>
+                <Link href="/feed" onClick={() => setIsLinksOpen(false)}>
                     <div className="nav-link">
                         <Newspaper />
                         <span>Feed</span>
@@ -129,7 +129,7 @@ export default function Navbar() {
                 {/* Profiles page link */}
                 <Link
                     href="/profiles"
-                    onClick={() => setIsLinksOpen(!isLinksOpen)}
+                    onClick={() => setIsLinksOpen(false)}
                 >
                     <div className="nav-link">
                         <UsersRound />
@@ -141,7 +141,7 @@ export default function Navbar() {
                         {/* Profile page link */}
                         <Link
                             href={`/profile/${user.id}`}
-                            onClick={() => setIsLinksOpen(!isLinksOpen)}
+                            onClick={() => setIsLinksOpen(false)}
                         >
                             <div className="nav-link">
                                 <User />
@@ -153,7 +153,7 @@ export default function Navbar() {
                             className="cursor-pointer"
                             onClick={() => {
                                 handleSignOut();
-                                setIsLinksOpen(!isLinksOpen);
+                                setIsLinksOpen(false);
                             }}
                         >
                             <div className="nav-link">
@@ -168,7 +168,7 @@ export default function Navbar() {
                         {/* Log in link */}
                         <Link
                             href="/auth/login"
-                            onClick={() => setIsLinksOpen(!isLinksOpen)}
+                            onClick={() => setIsLinksOpen(false)}
                         >
                             <div className="nav-link">
                                 <CircleArrowRight />
@@ -178,7 +178,7 @@ export default function Navbar() {
                         {/* Sign up link */}
                         <Link
                             href="/auth/sign-up"
-                            onClick={() => setIsLinksOpen(!isLinksOpen)}
+                            onClick={() => setIsLinksOpen(false)}
                         >
                             <div className="nav-link">
                                 <CircleArrowUp />

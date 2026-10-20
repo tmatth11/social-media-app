@@ -26,7 +26,7 @@ export async function editProfile(
         error,
     } = await supabase.auth.getUser();
 
-    // Return error if user is authenticated
+    // Return error if user is not authenticated
     if (error || !user) {
         return {
             success: false,
@@ -90,6 +90,6 @@ export async function editProfile(
 
     return {
         success: true,
-        message: "Profile updated successfully"
+        message: "Success: Profile updated successfully"
     }
 }
