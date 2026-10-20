@@ -1,7 +1,9 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import ImageUpload from "./image-upload";
+import { createClient } from "@/services/supabase/client";
 
 export default function CreateEditPostModal({
     isOpen,
@@ -11,12 +13,33 @@ export default function CreateEditPostModal({
     onClose: () => void;
 }) {
     const [content, setContent] = useState("");
-    const [imageUrl, setImageUrl] = useState(null);
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+    const supabase = useMemo(() => createClient(), []);
+
+    const handleCancelAndClose = useCallback(async () => {
+        if (imageUrl) {
+            try {
+                await supabase.storage.from("post_images").remove([imageUrl]);
+            } catch (error) {
+                console.error(
+                    "Failed to delete orphaned image from storage:",
+                    error,
+                );
+            }
+        }
+
+        setContent("");
+        setImageUrl(null);
+        onClose();
+    }, [imageUrl, supabase, onClose]);
 
     useEffect(() => {
+        if (!isOpen) return;
+
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
-                onClose();
+                handleCancelAndClose();
             }
         };
 
@@ -25,19 +48,19 @@ export default function CreateEditPostModal({
         return () => {
             window.removeEventListener("keydown", handleEscape);
         };
-    }, [onClose]);
+    }, [isOpen, handleCancelAndClose]);
 
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex justify-center bg-black/50 p-4">
+        <div className="fixed inset-0 z-50 flex justify-center overflow-auto bg-black/50 p-4">
             <div className="bg-container-primary flex h-fit w-full max-w-md flex-col rounded-lg p-4 shadow-xl">
                 <div className="flex justify-end">
                     <button
                         type="button"
                         onClick={onClose}
-                        aria-label="Close edit profile modal"
-                        title="Close edit profile modal"
+                        aria-label="Close create post modal"
+                        title="Close create post modal"
                         className="red-icon"
                     >
                         <X />
@@ -50,13 +73,12 @@ export default function CreateEditPostModal({
                         optional.
                     </p>
                 </div>
-                <form className="mt-4 flex flex-col">
+                <form className="flex flex-col">
                     <input
                         type="hidden"
                         name="image-url"
                         value={imageUrl || ""}
                     />
-                    {/* ImageUploadComponent goes here */}
                     <div className="form-group">
                         {/* Post content input */}
                         <label className="form-group">
@@ -73,13 +95,16 @@ export default function CreateEditPostModal({
                             />
                         </label>
                     </div>
+                    <ImageUpload
+                        url={imageUrl}
+                        onUpload={(_event, filePath) => {
+                            setImageUrl(filePath);
+                        }}
+                    />
                     <div className="my-4 flex items-center justify-center">
                         Error Message goes here
                     </div>
-                    <button
-                        className="btn btn-primary"
-                        type="submit"
-                    >
+                    <button className="btn btn-primary" type="submit">
                         Create
                     </button>
                 </form>
