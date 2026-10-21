@@ -25,3 +25,21 @@ export interface CreatePostState {
     success?: boolean;
     errors?: ReturnType<typeof z.treeifyError>;
 }
+
+export interface Post {
+    id: string;
+    content: string;
+    image_url: string | null;
+    user_id: string;
+    author: {
+        username: string;
+        display_name: string;
+        avatar_url: string | null;
+    };
+    likes: number;
+    dislikes: number;
+    comments: number;
+    currentUserReaction: string;
+    hasLiked: boolean;
+    hasDisliked: boolean;
+}

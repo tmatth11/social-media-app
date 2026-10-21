@@ -3,6 +3,7 @@
 // Source: https://medium.com/@ferlat.simon/infinite-scroll-with-nextjs-server-actions-a-simple-guide-76a894824cfd
 
 import { createClient } from "@/services/supabase/server";
+import { Post } from "@/types";
 
 export const getPosts = async (offset: number, limit: number = 10) => {
     const supabase = await createClient();
@@ -12,7 +13,7 @@ export const getPosts = async (offset: number, limit: number = 10) => {
     } = await supabase.auth.getUser();
     const userId = user?.id;
 
-    const from = (offset - 1) * limit;
+    const from = offset;
     const to = from + limit - 1;
 
     let query = supabase
@@ -20,7 +21,6 @@ export const getPosts = async (offset: number, limit: number = 10) => {
         .select(
             `
             id,
-            updated_at,
             content,
             image_url,
             user_id,
@@ -42,7 +42,7 @@ export const getPosts = async (offset: number, limit: number = 10) => {
     if (userId) {
         query = query.eq("user_reaction.user_id", userId);
     }
-    // Return impossible user_reaction user_id for users who are not logged in 
+    // Return impossible user_reaction user_id for users who are not logged in
     else {
         query = query.eq(
             "user_reaction.user_id",
@@ -59,7 +59,7 @@ export const getPosts = async (offset: number, limit: number = 10) => {
     if (error) {
         console.error("Error:", error);
 
-        return { data: null, error };
+        return { data: [] as Post[], error };
     }
 
     const formattedPosts =
@@ -69,7 +69,6 @@ export const getPosts = async (offset: number, limit: number = 10) => {
 
             return {
                 id: post.id,
-                updated_at: post.updated_at,
                 content: post.content,
                 image_url: post.image_url,
                 user_id: post.user_id,
@@ -82,6 +81,7 @@ export const getPosts = async (offset: number, limit: number = 10) => {
                 hasDisliked: currentUserReactionType === "dislike",
             };
         }) ?? [];
+
 
     return { data: formattedPosts, error: null };
 };
