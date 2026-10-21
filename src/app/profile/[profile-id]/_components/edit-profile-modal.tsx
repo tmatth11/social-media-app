@@ -1,10 +1,11 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useCallback, useEffect, useMemo, useState } from "react";
 import { EditProfileState, Profile } from "@/types";
 import { editProfile } from "@/actions/profile-actions";
 import AvatarUpload from "./avatar-upload";
+import { createClient } from "@/services/supabase/client";
 
 const initialState: EditProfileState = {};
 
@@ -25,6 +26,23 @@ export default function EditProfileModal({
         FormData
     >(editProfile, initialState);
 
+    const supabase = useMemo(() => createClient(), []);
+
+    const handleCancelAndClose = useCallback(async () => {
+        if (avatarUrl && avatarUrl !== profile.avatar_url) {
+            try {
+                await supabase.storage.from("avatars").remove([avatarUrl]);
+            } catch (error) {
+                console.error(
+                    "Failed to delete orphaned image from storage:",
+                    error,
+                );
+            }
+        }
+
+        onClose();
+    }, [avatarUrl, profile.avatar_url, supabase, onClose]);
+
     useEffect(() => {
         if (state?.success) {
             onClose();
@@ -32,9 +50,11 @@ export default function EditProfileModal({
     }, [onClose, state?.success]);
 
     useEffect(() => {
+        if (!isOpen) return;
+
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
-                onClose();
+                handleCancelAndClose();
             }
         };
 
@@ -43,7 +63,7 @@ export default function EditProfileModal({
         return () => {
             window.removeEventListener("keydown", handleEscape);
         };
-    }, [onClose]);
+    }, [isOpen, handleCancelAndClose]);
 
     if (!isOpen) return null;
 
@@ -56,7 +76,7 @@ export default function EditProfileModal({
                 <div className="flex justify-end">
                     <button
                         type="button"
-                        onClick={onClose}
+                        onClick={handleCancelAndClose}
                         aria-label="Close edit profile modal"
                         title="Close edit profile modal"
                         className="red-icon"

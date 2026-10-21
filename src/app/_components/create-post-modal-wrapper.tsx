@@ -14,10 +14,12 @@ export default function CreatePostModalWrapper({}) {
             >
                 Create Post
             </button>
-            <CreatePostModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-            />
+            {isModalOpen && (
+                <CreatePostModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                />
+            )}
         </>
     );
 }
