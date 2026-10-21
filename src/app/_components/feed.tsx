@@ -28,7 +28,9 @@ export default async function Feed({ canPost }: { canPost: boolean }) {
                 {canPost && <CreatePostModalWrapper />}
             </div>
             {message === "" ? (
-                <PostList initialPosts={initialPosts} />
+                <PostList
+                    initialPosts={initialPosts}
+                />
             ) : (
                 <p className="text-center">{message}</p>
             )}

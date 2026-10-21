@@ -10,11 +10,13 @@ const NUMBER_OF_POSTS_TO_FETCH = 10;
 
 export default function PostList({ initialPosts }: { initialPosts: Post[] }) {
     const [offset, setOffset] = useState(NUMBER_OF_POSTS_TO_FETCH);
-    const [posts, setPosts] = useState<Post[]>(initialPosts);
+    const [extraPosts, setExtraPosts] = useState<Post[]>([]);
     const [hasMore, setHasMore] = useState(
         initialPosts.length >= NUMBER_OF_POSTS_TO_FETCH,
     );
     const [isPending, startTransition] = useTransition();
+
+    const allPosts = [...initialPosts, ...extraPosts];
 
     const { ref } = useInView({
         onChange: (inView) => {
@@ -32,7 +34,7 @@ export default function PostList({ initialPosts }: { initialPosts: Post[] }) {
                     setHasMore(false);
                 }
 
-                setPosts((prev) => [...prev, ...newPosts]);
+                setExtraPosts((prev) => [...prev, ...newPosts]);
                 setOffset((prev) => prev + NUMBER_OF_POSTS_TO_FETCH);
             });
         },
@@ -40,7 +42,7 @@ export default function PostList({ initialPosts }: { initialPosts: Post[] }) {
 
     return (
         <div className="flex flex-col">
-            {posts.map((post) => (
+            {allPosts.map((post) => (
                 <PostCard key={post.id} />
             ))}
 
