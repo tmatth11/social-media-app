@@ -58,7 +58,7 @@ export default function CreateEditPostModal({
                 <div className="flex justify-end">
                     <button
                         type="button"
-                        onClick={onClose}
+                        onClick={handleCancelAndClose}
                         aria-label="Close create post modal"
                         title="Close create post modal"
                         className="red-icon"
