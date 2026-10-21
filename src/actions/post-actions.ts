@@ -1,3 +1,5 @@
+"use server";
+
 import { createClient } from "@/services/supabase/server";
 import { CreatePostState } from "@/types";
 import { revalidatePath } from "next/cache";
@@ -34,7 +36,7 @@ export async function createPost(
     // Get form elements
     const rawData = {
         content: formData.get("content"),
-        imageUrl: formData.get("imageUrl"),
+        imageUrl: formData.get("image-url"),
     };
 
     // Validate fields

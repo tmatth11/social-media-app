@@ -1,9 +1,19 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+    useActionState,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import ImageUpload from "./image-upload";
 import { createClient } from "@/services/supabase/client";
+import { CreatePostState } from "@/types";
+import { createPost } from "@/actions/post-actions";
+
+const initialState: CreatePostState = {};
 
 export default function CreateEditPostModal({
     isOpen,
@@ -14,6 +24,11 @@ export default function CreateEditPostModal({
 }) {
     const [content, setContent] = useState("");
     const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+    const [state, formAction, isPending] = useActionState<
+        CreatePostState,
+        FormData
+    >(createPost, initialState);
 
     const supabase = useMemo(() => createClient(), []);
 
@@ -33,6 +48,12 @@ export default function CreateEditPostModal({
         setImageUrl(null);
         onClose();
     }, [imageUrl, supabase, onClose]);
+
+    useEffect(() => {
+        if (state?.success) {
+            onClose();
+        }
+    }, [onClose, state?.success]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -73,7 +94,7 @@ export default function CreateEditPostModal({
                         optional.
                     </p>
                 </div>
-                <form className="flex flex-col">
+                <form action={formAction} className="flex flex-col">
                     <input
                         type="hidden"
                         name="image-url"
@@ -102,9 +123,15 @@ export default function CreateEditPostModal({
                         }}
                     />
                     <div className="my-4 flex items-center justify-center">
-                        Error Message goes here
+                        {!state?.success && (
+                            <p className="form-error">{state?.message}</p>
+                        )}
                     </div>
-                    <button className="btn btn-primary" type="submit">
+                    <button
+                        className="btn btn-primary"
+                        type="submit"
+                        disabled={isPending || content.trim() === ""}
+                    >
                         Create
                     </button>
                 </form>
