@@ -27,7 +27,8 @@ export const getPosts = async (offset: number, limit: number = 10) => {
             profiles:user_id (
                 username,
                 display_name,
-                avatar_url
+                avatar_url,
+                updated_at
             ),
             likes:reactions!left(count),
             dislikes:reactions!left(count),

@@ -21,7 +21,7 @@ export default async function FeedPage() {
 
     return (
         <div className="flex flex-col items-center overflow-x-hidden">
-            <div className="flex flex-col items-center md:w-3xl">
+            <div className="flex flex-col items-center md:w-3xl mt-4">
                 <Feed canPost={canPost} />
             </div>
         </div>

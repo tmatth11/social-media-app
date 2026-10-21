@@ -43,7 +43,7 @@ export default function PostList({ initialPosts }: { initialPosts: Post[] }) {
     return (
         <div className="flex flex-col">
             {allPosts.map((post) => (
-                <PostCard key={post.id} />
+                <PostCard key={post.id} {...post} />
             ))}
 
             {hasMore && (

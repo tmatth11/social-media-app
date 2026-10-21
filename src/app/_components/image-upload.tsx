@@ -112,7 +112,7 @@ export default function ImageUpload({
             <Image
                 className="my-2"
                 src={imageUrl ? imageUrl : "/blank-image.png"}
-                alt="User avatar"
+                alt="Post image"
                 width={300}
                 height={400}
                 unoptimized={imageUrl?.startsWith("blob:")}

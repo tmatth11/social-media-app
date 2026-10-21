@@ -1,7 +1,75 @@
-export default function PostCard() {
+import { createClient } from "@/services/supabase/client";
+import { Post } from "@/types";
+import Image from "next/image";
+import Link from "next/link";
+
+export default function PostCard({
+    id,
+    content,
+    image_url,
+    user_id,
+    author,
+    likes,
+    dislikes,
+    comments,
+    currentUserReaction,
+    hasLiked,
+    hasDisliked,
+}: Post) {
+    const supabase = createClient();
+
+    const baseAvatarUrl = author.avatar_url
+        ? supabase.storage.from("avatars").getPublicUrl(author.avatar_url).data
+            .publicUrl
+        : null;
+
+    const avatarSrc = baseAvatarUrl
+        ? `${baseAvatarUrl}?t=${new Date(author.updated_at).getTime()}`
+        : "/blank-user.png";
+
+    const baseImageUrl = image_url
+        ? supabase.storage.from("post_images").getPublicUrl(image_url).data
+            .publicUrl
+        : null;
+
+    const imageSrc =
+        baseImageUrl &&
+        `${baseImageUrl}?t=${new Date(author.updated_at).getTime()}`;
+
     return (
-        <div className="p-2 border-b last:border-b-0">
-            <p>Post works!</p>
+        <div className="flex flex-col gap-2 border-b p-2 last:border-b-0">
+            {/* Post header */}
+            <div className="flex items-center gap-2">
+                {/* Author avatar */}
+                <Image
+                    unoptimized
+                    className="h-[50] rounded-full object-cover"
+                    src={avatarSrc}
+                    alt={`${author.username}'s profile picture`}
+                    width={50}
+                    height={50}
+                />
+                <div>
+                    <Link
+                        href={`/profile/${user_id}`}
+                        className="text-sm hover:underline"
+                    >
+                        @{author.username}
+                    </Link>
+                    <span className="ml-2">{author.display_name}</span>
+                </div>
+            </div>
+            <p>{content}</p>
+            {imageSrc && (
+                <Image
+                    className="h-[200]"
+                    unoptimized
+                    src={imageSrc}
+                    alt="Post image"
+                    width={300}
+                    height={400}
+                />
+            )}
         </div>
     );
 }

@@ -35,6 +35,7 @@ export interface Post {
         username: string;
         display_name: string;
         avatar_url: string | null;
+        updated_at: string;
     };
     likes: number;
     dislikes: number;
