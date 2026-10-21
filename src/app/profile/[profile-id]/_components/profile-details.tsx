@@ -25,11 +25,11 @@ export default async function ProfileDetails({
         <div className="flex flex-col items-center gap-2 p-4">
             <Image
                 unoptimized
-                className="rounded-full"
+                className="rounded-full object-cover h-25"
                 src={avatarSrc}
                 alt={`${profile.username}'s profile picture`}
-                width="100"
-                height="100"
+                width={100}
+                height={100}
             />
             <div>
                 <h3>{profile.display_name}</h3>

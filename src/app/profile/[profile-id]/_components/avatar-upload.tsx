@@ -112,11 +112,11 @@ export default function AvatarUpload({
         <div className="flex flex-col items-center">
             <p className="font-semibold">Profile Picture</p>
             <Image
-                className="my-2 rounded-full"
+                className="my-2 rounded-full object-cover h-25"
                 src={avatarUrl ? avatarUrl : "/blank-user.png"}
                 alt="User avatar"
-                width="100"
-                height="100"
+                width={100}
+                height={100}
                 unoptimized={avatarUrl?.startsWith("blob:")}
             />
             <button
