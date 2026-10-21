@@ -21,7 +21,7 @@ export default async function Feed({ canPost }: { canPost: boolean }) {
     }
 
     return (
-        <div className="flex w-full flex-col">
+        <div className="bg-container-primary flex w-full flex-col rounded-md">
             <div className="flex flex-col items-center gap-2 p-4 md:flex-row md:justify-between">
                 <h2>Feed</h2>
                 {canPost && <CreatePostModalWrapper />}

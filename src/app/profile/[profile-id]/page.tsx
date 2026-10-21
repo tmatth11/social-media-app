@@ -37,8 +37,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
     return (
         <div className="flex flex-col items-center">
-            <div className="mt-4 bg-container-primary grid w-full grid-cols-1 md:max-w-3xl md:grid-cols-3">
-                <div className="border-b-2 md:col-span-1 md:border-r-2 md:border-b-0">
+            <div className="mt-4 grid w-full grid-cols-1 md:max-w-3xl md:grid-cols-3 p-2">
+                <div className="border-b-2 md:col-span-1 md:border-b-0">
                     <ProfileDetails profile={profile} isOwner={isOwner} />
                 </div>
                 <div className="md:col-span-2">

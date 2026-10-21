@@ -22,7 +22,7 @@ export default async function ProfileDetails({
         : "/blank-user.png";
 
     return (
-        <div className="flex flex-col items-center gap-2 p-4">
+        <div className="md:fixed flex flex-col items-center gap-2 p-4">
             <Image
                 unoptimized
                 className="rounded-full object-cover h-25"
