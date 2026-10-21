@@ -47,10 +47,7 @@ export default function PostList({ initialPosts }: { initialPosts: Post[] }) {
             ))}
 
             {hasMore && (
-                <p
-                    ref={ref}
-                    className="mt-4 text-center"
-                >
+                <p ref={ref} className="mt-4 text-center">
                     {isPending ? "Loading..." : ""}
                 </p>
             )}
