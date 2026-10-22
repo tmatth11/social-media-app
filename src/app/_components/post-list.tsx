@@ -11,7 +11,7 @@ const NUMBER_OF_POSTS_TO_FETCH = 10;
 export default function PostList({ initialPosts }: { initialPosts: Post[] }) {
     const [posts, setPosts] = useState<Post[]>(initialPosts);
     const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
+    const [hasMore, setHasMore] = useState(initialPosts.length === NUMBER_OF_POSTS_TO_FETCH);
     const [isLoading, setIsLoading] = useState(false);
 
     const { ref, inView } = useInView();
