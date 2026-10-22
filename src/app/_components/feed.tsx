@@ -5,10 +5,7 @@ import PostList from "./post-list";
 const INITIAL_NUMBER_OF_POSTS = 10;
 
 export default async function Feed({ canPost }: { canPost: boolean }) {
-    const { data: initialPosts, error } = await getPosts(
-        0,
-        INITIAL_NUMBER_OF_POSTS,
-    );
+    const { data: initialPosts, error } = await getPosts(1);
 
     let message = "";
 

@@ -2,53 +2,58 @@
 
 import { Post } from "@/types";
 import { getPosts } from "@/utils/queries/posts";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useInView } from "react-intersection-observer";
 import PostCard from "./post-card";
 
 const NUMBER_OF_POSTS_TO_FETCH = 10;
 
 export default function PostList({ initialPosts }: { initialPosts: Post[] }) {
-    const [offset, setOffset] = useState(NUMBER_OF_POSTS_TO_FETCH);
-    const [extraPosts, setExtraPosts] = useState<Post[]>([]);
-    const [hasMore, setHasMore] = useState(
-        initialPosts.length >= NUMBER_OF_POSTS_TO_FETCH,
-    );
-    const [isPending, startTransition] = useTransition();
+    const [posts, setPosts] = useState<Post[]>(initialPosts);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const allPosts = [...initialPosts, ...extraPosts];
+    const { ref, inView } = useInView();
 
-    const { ref } = useInView({
-        onChange: (inView) => {
-            if (!inView || isPending || !hasMore) return;
+    useEffect(() => {
+        if (inView && hasMore && !isLoading) {
+            const loadMorePosts = async () => {
+                setIsLoading(true);
+                const nextPage = page + 1;
+                const { data: newPosts, error } = await getPosts(nextPage);
 
-            startTransition(async () => {
-                const { data: newPosts, error } = await getPosts(
-                    offset,
-                    NUMBER_OF_POSTS_TO_FETCH,
-                );
-
-                if (error) return;
-
-                if (newPosts.length < NUMBER_OF_POSTS_TO_FETCH) {
-                    setHasMore(false);
+                if (error) {
+                    setIsLoading(false);
+                    return;
                 }
 
-                setExtraPosts((prev) => [...prev, ...newPosts]);
-                setOffset((prev) => prev + NUMBER_OF_POSTS_TO_FETCH);
-            });
-        },
-    });
+                if (!newPosts || newPosts.length === 0) {
+                    setHasMore(false);
+                } else {
+                    setPosts((prevPosts) => [...prevPosts, ...newPosts]);
+                    setPage(nextPage);
+
+                    if (newPosts.length < NUMBER_OF_POSTS_TO_FETCH) {
+                        setHasMore(false);
+                    }
+                }
+                setIsLoading(false);
+            };
+
+            loadMorePosts();
+        }
+    }, [inView, page, hasMore, isLoading]);
 
     return (
         <div className="flex flex-col">
-            {allPosts.map((post) => (
+            {posts.map((post) => (
                 <PostCard key={post.id} {...post} />
             ))}
 
             {hasMore && (
                 <p ref={ref} className="mt-4 text-center">
-                    {isPending ? "Loading..." : ""}
+                    Loading...
                 </p>
             )}
         </div>

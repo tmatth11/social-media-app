@@ -5,7 +5,7 @@
 import { createClient } from "@/services/supabase/server";
 import { Post } from "@/types";
 
-export const getPosts = async (offset: number, limit: number = 10) => {
+export const getPosts = async (page: number, limit: number = 10) => {
     const supabase = await createClient();
 
     const {
@@ -13,7 +13,7 @@ export const getPosts = async (offset: number, limit: number = 10) => {
     } = await supabase.auth.getUser();
     const userId = user?.id;
 
-    const from = offset;
+    const from = (page - 1) * limit;
     const to = from + limit - 1;
 
     let query = supabase
