@@ -2,7 +2,7 @@
 "use client";
 
 import { createClient } from "@/services/supabase/client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 export default function ImageUpload({

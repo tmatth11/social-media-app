@@ -86,3 +86,7 @@ export async function createPost(
         message: "Success: Post created successfully.",
     };
 }
+
+export async function deletePost() {
+    
+}

@@ -14,7 +14,7 @@ export default async function ProfileDetails({
             <Image
                 unoptimized
                 className="h-25 rounded-full object-cover"
-                src={profile.avatar_url ? profile.avatar_url : "/blank-user"}
+                src={profile.avatar_url ? profile.avatar_url : "/blank-user.png"}
                 alt={`${profile.username}'s profile picture`}
                 width={100}
                 height={100}
