@@ -23,7 +23,8 @@ export default function CreateEditPostModal({
     onClose: () => void;
 }) {
     const [content, setContent] = useState("");
-    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [imagePath, setImagePath] = useState<string | null>(null);
+    const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
 
     const [state, formAction, isPending] = useActionState<
         CreatePostState,
@@ -33,9 +34,9 @@ export default function CreateEditPostModal({
     const supabase = useMemo(() => createClient(), []);
 
     const handleCancelAndClose = useCallback(async () => {
-        if (imageUrl) {
+        if (imagePath) {
             try {
-                await supabase.storage.from("post_images").remove([imageUrl]);
+                await supabase.storage.from("post_images").remove([imagePath]);
             } catch (error) {
                 console.error(
                     "Failed to delete orphaned image from storage:",
@@ -43,11 +44,8 @@ export default function CreateEditPostModal({
                 );
             }
         }
-
-        setContent("");
-        setImageUrl(null);
         onClose();
-    }, [imageUrl, supabase, onClose]);
+    }, [imagePath, supabase, onClose]);
 
     useEffect(() => {
         if (state?.success) {
@@ -98,7 +96,7 @@ export default function CreateEditPostModal({
                     <input
                         type="hidden"
                         name="image-url"
-                        value={imageUrl || ""}
+                        value={imagePreviewUrl || ""}
                     />
                     <div className="form-group">
                         {/* Post content input */}
@@ -117,9 +115,10 @@ export default function CreateEditPostModal({
                         </label>
                     </div>
                     <ImageUpload
-                        url={imageUrl}
-                        onUpload={(_event, filePath) => {
-                            setImageUrl(filePath);
+                        url={imagePreviewUrl}
+                        onUpload={(filePath, publicUrl) => {
+                            setImagePath(filePath);
+                            setImagePreviewUrl(publicUrl);
                         }}
                     />
                     <div className="my-4 flex items-center justify-center">

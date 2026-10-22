@@ -2,8 +2,6 @@ import { getPosts } from "@/utils/queries/posts";
 import CreatePostModalWrapper from "./create-post-modal-wrapper";
 import PostList from "./post-list";
 
-const INITIAL_NUMBER_OF_POSTS = 10;
-
 export default async function Feed({ canPost }: { canPost: boolean }) {
     const { data: initialPosts, error } = await getPosts(1);
 
@@ -29,7 +27,7 @@ export default async function Feed({ canPost }: { canPost: boolean }) {
                     initialPosts={initialPosts}
                 />
             ) : (
-                <p className="text-center">{message}</p>
+                <p className="text-center mb-2">{message}</p>
             )}
         </div>
     );

@@ -10,64 +10,13 @@ export default function ImageUpload({
     onUpload,
 }: {
     url: string | null;
-    onUpload: (event: React.ChangeEvent<HTMLInputElement>, url: string) => void;
+    onUpload: (filePath: string, publicUrl: string) => void;
 }) {
-    const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [uploading, setUploading] = useState(false);
-
-    // References the file input element
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Initializes supabase client exactly once
     const supabase = useMemo(() => createClient(), []);
-
-    useEffect(() => {
-        let objectUrl: string | null = null;
-        let cancelled = false;
-
-        // Download image from post_image bucket and set image URL
-        async function downloadImage(path: string) {
-            try {
-                const { data, error } = await supabase.storage
-                    .from("post_images")
-                    .download(path);
-
-                if (error) {
-                    throw error;
-                }
-
-                objectUrl = URL.createObjectURL(data);
-
-                if (cancelled) {
-                    URL.revokeObjectURL(objectUrl);
-                    return;
-                }
-
-                setImageUrl(objectUrl);
-            } catch (error) {
-                const errorMessage =
-                    error instanceof Error
-                        ? error.message
-                        : "An unknown database error occurred";
-
-                if (!cancelled) {
-                    console.error("Error downloading image:", errorMessage);
-                }
-            }
-        }
-
-        if (url) {
-            void downloadImage(url);
-        }
-
-        return () => {
-            cancelled = true;
-
-            if (objectUrl) {
-                URL.revokeObjectURL(objectUrl);
-            }
-        };
-    }, [url, supabase]);
 
     async function uploadPostImage(event: React.ChangeEvent<HTMLInputElement>) {
         try {
@@ -92,8 +41,11 @@ export default function ImageUpload({
                 throw uploadError;
             }
 
-            setImageUrl(URL.createObjectURL(file));
-            onUpload(event, filePath);
+            const { data } = supabase.storage
+                .from("post_images")
+                .getPublicUrl(filePath);
+
+            onUpload(filePath, data.publicUrl);
         } catch (error) {
             const errorMessage =
                 error instanceof Error
@@ -111,11 +63,11 @@ export default function ImageUpload({
             <p className="font-semibold">Post image</p>
             <Image
                 className="my-2"
-                src={imageUrl ? imageUrl : "/blank-image.png"}
+                src={url ? url : "/blank-image.png"}
                 alt="Post image"
                 width={300}
                 height={400}
-                unoptimized={imageUrl?.startsWith("blob:")}
+                unoptimized={url?.startsWith("blob:")}
             />
             <button
                 type="button"

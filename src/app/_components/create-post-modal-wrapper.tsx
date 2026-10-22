@@ -16,6 +16,7 @@ export default function CreatePostModalWrapper({}) {
             </button>
             {isModalOpen && (
                 <CreatePostModal
+                    key={`create-post-${isModalOpen}`}
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
                 />

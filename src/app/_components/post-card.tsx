@@ -16,16 +16,6 @@ export default function PostCard({
     hasLiked,
     hasDisliked,
 }: Post) {
-    const supabase = createClient();
-
-    const baseImageUrl = image_url
-        ? supabase.storage.from("post_images").getPublicUrl(image_url).data
-            .publicUrl
-        : null;
-
-    const imageSrc =
-        baseImageUrl &&
-        `${baseImageUrl}?t=${new Date(author.updated_at).getTime()}`;
 
     return (
         <div className="flex flex-col gap-2 border-b p-2 last:border-b-0">
@@ -51,11 +41,11 @@ export default function PostCard({
                 </div>
             </div>
             <p>{content}</p>
-            {imageSrc && (
+            {image_url && (
                 <Image
                     className="h-[200]"
                     unoptimized
-                    src={imageSrc}
+                    src={image_url}
                     alt="Post image"
                     width={300}
                     height={400}
