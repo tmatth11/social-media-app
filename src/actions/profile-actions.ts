@@ -2,7 +2,7 @@
 
 import { createClient } from "@/services/supabase/server";
 import { EditProfileState } from "@/types";
-import { revalidatePath } from "next/cache";
+import { refresh, revalidatePath } from "next/cache";
 import z from "zod";
 
 const editProfileSchema = z.object({
@@ -85,7 +85,7 @@ export async function editProfile(
         }
     }
 
-    // Revalidate profile page
+    // Revalidate profile page and refresh
     revalidatePath(`/profile/${profileId}`);
 
     return {

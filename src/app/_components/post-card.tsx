@@ -18,15 +18,6 @@ export default function PostCard({
 }: Post) {
     const supabase = createClient();
 
-    const baseAvatarUrl = author.avatar_url
-        ? supabase.storage.from("avatars").getPublicUrl(author.avatar_url).data
-            .publicUrl
-        : null;
-
-    const avatarSrc = baseAvatarUrl
-        ? `${baseAvatarUrl}?t=${new Date(author.updated_at).getTime()}`
-        : "/blank-user.png";
-
     const baseImageUrl = image_url
         ? supabase.storage.from("post_images").getPublicUrl(image_url).data
             .publicUrl
@@ -44,7 +35,7 @@ export default function PostCard({
                 <Image
                     unoptimized
                     className="h-[50] rounded-full object-cover"
-                    src={avatarSrc}
+                    src={author.avatar_url ? author.avatar_url : "/blank-user.png"}
                     alt={`${author.username}'s profile picture`}
                     width={50}
                     height={50}

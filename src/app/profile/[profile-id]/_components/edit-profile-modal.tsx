@@ -1,7 +1,13 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useActionState, useCallback, useEffect, useMemo, useState } from "react";
+import {
+    useActionState,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import { EditProfileState, Profile } from "@/types";
 import { editProfile } from "@/actions/profile-actions";
 import AvatarUpload from "./avatar-upload";
@@ -19,7 +25,8 @@ export default function EditProfileModal({
     onClose: () => void;
 }) {
     const [displayName, setDisplayName] = useState(profile.display_name);
-    const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url);
+    const [avatarPath, setAvatarPath] = useState<string | null>(null);
+    const [avatarPreviewUrl, setAvatarPreviewUrl] = useState(profile.avatar_url);
 
     const [state, formAction, isPending] = useActionState<
         EditProfileState,
@@ -29,9 +36,9 @@ export default function EditProfileModal({
     const supabase = useMemo(() => createClient(), []);
 
     const handleCancelAndClose = useCallback(async () => {
-        if (avatarUrl && avatarUrl !== profile.avatar_url) {
+        if (avatarPath) {
             try {
-                await supabase.storage.from("avatars").remove([avatarUrl]);
+                await supabase.storage.from("avatars").remove([avatarPath]);
             } catch (error) {
                 console.error(
                     "Failed to delete orphaned image from storage:",
@@ -41,11 +48,12 @@ export default function EditProfileModal({
         }
 
         onClose();
-    }, [avatarUrl, profile.avatar_url, supabase, onClose]);
+    }, [avatarPath, supabase, onClose]);
 
     useEffect(() => {
         if (state?.success) {
             onClose();
+            window.location.reload();
         }
     }, [onClose, state?.success]);
 
@@ -96,14 +104,15 @@ export default function EditProfileModal({
                     <input
                         type="hidden"
                         name="avatar-url"
-                        value={avatarUrl || ""}
+                        value={avatarPreviewUrl || ""}
                     />
                     <AvatarUpload
                         key={`${profile.id}-${isOpen}`}
                         profileId={profile.id}
-                        url={avatarUrl}
-                        onUpload={(_event, filePath) => {
-                            setAvatarUrl(filePath);
+                        url={avatarPreviewUrl}
+                        onUpload={(filePath, publicUrl) => {
+                            setAvatarPath(filePath);
+                            setAvatarPreviewUrl(publicUrl);
                         }}
                     />
                     <div className="form-group">
