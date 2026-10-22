@@ -8,10 +8,18 @@ import PostCard from "./post-card";
 
 const NUMBER_OF_POSTS_TO_FETCH = 10;
 
-export default function PostList({ initialPosts }: { initialPosts: Post[] }) {
+export default function PostList({
+    initialPosts,
+    profileId,
+}: {
+    initialPosts: Post[];
+    profileId?: string;
+}) {
     const [posts, setPosts] = useState<Post[]>(initialPosts);
     const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(initialPosts.length === NUMBER_OF_POSTS_TO_FETCH);
+    const [hasMore, setHasMore] = useState(
+        initialPosts.length === NUMBER_OF_POSTS_TO_FETCH,
+    );
     const [isLoading, setIsLoading] = useState(false);
 
     const { ref, inView } = useInView();
@@ -21,7 +29,11 @@ export default function PostList({ initialPosts }: { initialPosts: Post[] }) {
             const loadMorePosts = async () => {
                 setIsLoading(true);
                 const nextPage = page + 1;
-                const { data: newPosts, error } = await getPosts(nextPage);
+                const { data: newPosts, error } = await getPosts(
+                    nextPage,
+                    NUMBER_OF_POSTS_TO_FETCH,
+                    profileId,
+                );
 
                 if (error) {
                     setIsLoading(false);

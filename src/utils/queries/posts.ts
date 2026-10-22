@@ -5,7 +5,11 @@
 import { createClient } from "@/services/supabase/server";
 import { Post } from "@/types";
 
-export const getPosts = async (page: number, limit: number = 10) => {
+export const getPosts = async (
+    page: number,
+    limit: number = 10,
+    profileId?: string,
+) => {
     const supabase = await createClient();
 
     const {
@@ -51,6 +55,11 @@ export const getPosts = async (page: number, limit: number = 10) => {
         );
     }
 
+    // Query posts only from the provided profile ID
+    if (profileId) {
+        query = query.eq("user_id", profileId);
+    }
+
     const { data, error } = await query
         .order("updated_at", {
             ascending: false,
@@ -82,7 +91,6 @@ export const getPosts = async (page: number, limit: number = 10) => {
                 hasDisliked: currentUserReactionType === "dislike",
             };
         }) ?? [];
-
 
     return { data: formattedPosts, error: null };
 };

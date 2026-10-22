@@ -2,8 +2,14 @@ import { getPosts } from "@/utils/queries/posts";
 import CreatePostModalWrapper from "./create-post-modal-wrapper";
 import PostList from "./post-list";
 
-export default async function Feed({ canPost }: { canPost: boolean }) {
-    const { data: initialPosts, error } = await getPosts(1);
+export default async function Feed({
+    canPost,
+    profileId,
+}: {
+    canPost: boolean;
+    profileId?: string;
+}) {
+    const { data: initialPosts, error } = await getPosts(1, 10, profileId);
 
     let message = "";
 
@@ -25,9 +31,10 @@ export default async function Feed({ canPost }: { canPost: boolean }) {
                 <PostList
                     key={initialPosts.map((p) => p.id).join(",")}
                     initialPosts={initialPosts}
+                    profileId={profileId}
                 />
             ) : (
-                <p className="text-center mb-2">{message}</p>
+                <p className="mb-2 text-center">{message}</p>
             )}
         </div>
     );
