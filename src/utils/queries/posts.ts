@@ -5,9 +5,38 @@
 import { createClient } from "@/services/supabase/server";
 import { Post } from "@/types";
 
+const ITEMS_PER_PAGE = 10;
+
+export async function getPostsPages(profileId?: string) {
+    const supabase = await createClient();
+
+    // Get number of posts
+    let query = supabase
+        .from("posts")
+        .select("*", { count: "exact", head: true });
+
+    // Filter the user ID if provided
+    if (profileId) {
+        query = query.eq("user_id", profileId);
+    }
+
+    const { count: postCount, error: countError } = await query;
+
+    if (countError || postCount === null) {
+        return {
+            success: false,
+            data: null,
+        };
+    }
+
+    return {
+        success: true,
+        data: Math.ceil(postCount / ITEMS_PER_PAGE),
+    };
+}
+
 export const getPosts = async (
-    page: number,
-    limit: number = 10,
+    currentPage: number,
     profileId?: string,
 ) => {
     const supabase = await createClient();
@@ -17,8 +46,10 @@ export const getPosts = async (
     } = await supabase.auth.getUser();
     const userId = user?.id;
 
-    const from = (page - 1) * limit;
-    const to = from + limit - 1;
+    const page = Math.max(1, currentPage || 1);
+
+    const from = (page - 1) * ITEMS_PER_PAGE;
+    const to = from + ITEMS_PER_PAGE - 1;
 
     let query = supabase
         .from("posts")

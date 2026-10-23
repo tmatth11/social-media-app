@@ -19,16 +19,10 @@ export default function EditPostModal({
     isOpen,
     onClose,
     post,
-    onEdit,
 }: {
     isOpen: boolean;
     onClose: () => void;
     post: Post;
-    onEdit: (
-        id: string,
-        newContent: string,
-        newImageUrl: string | null,
-    ) => void;
 }) {
     const [content, setContent] = useState(post.content);
     const [imagePath, setImagePath] = useState<string | null>(null);
@@ -59,9 +53,8 @@ export default function EditPostModal({
     useEffect(() => {
         if (state?.success) {
             onClose();
-            onEdit(post.id, state.content!, state.imageUrl!);
         }
-    }, [onClose, onEdit, post.id, state.content, state.imageUrl, state?.success]);
+    }, [onClose, state?.success]);
 
     useEffect(() => {
         if (!isOpen) return;

@@ -5,13 +5,7 @@ import { SquarePen } from "lucide-react";
 import EditPostModal from "./edit-post-modal";
 import { Post } from "@/types";
 
-export default function EditPostModalWrapper({
-    post,
-    onEdit,
-}: {
-    post: Post;
-    onEdit: (id: string, newContent: string, newImageUrl: string | null) => void;
-}) {
+export default function EditPostModalWrapper({ post }: { post: Post; }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
@@ -30,7 +24,6 @@ export default function EditPostModalWrapper({
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
                     post={post}
-                    onEdit={onEdit}
                 />
             )}
         </>

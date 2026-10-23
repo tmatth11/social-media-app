@@ -1,89 +1,35 @@
-"use client";
-
-import { Post } from "@/types";
 import { getPosts } from "@/utils/queries/posts";
-import { useEffect, useState } from "react";
-import { useInView } from "react-intersection-observer";
 import PostCard from "./post-card";
 
-const NUMBER_OF_POSTS_TO_FETCH = 10;
-
-export default function PostList({
-    initialPosts,
+export default async function PostList({
     profileId,
+    currentPage,
 }: {
-    initialPosts: Post[];
     profileId?: string;
+    currentPage: number;
 }) {
-    const [posts, setPosts] = useState<Post[]>(initialPosts);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(
-        initialPosts.length === NUMBER_OF_POSTS_TO_FETCH,
+    const { data: posts, error: postsError } = await getPosts(
+        currentPage,
+        profileId,
     );
-    const [isLoading, setIsLoading] = useState(false);
 
-    const { ref, inView } = useInView();
+    if (postsError || !posts) {
+        return <p className="text-center form-error">An error has occured fetching posts.</p>
+    }
 
-    const onDeletePost = (postId: string) => {
-        setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
-    };
-
-    const onEditPost = (
-        postId: string,
-        newContent: string,
-        newImageUrl: string | null,
-    ) => {
-        setPosts((prevPosts) =>
-            prevPosts.map((post) =>
-                post.id === postId ? { ...post, content: newContent, image_url: newImageUrl } : post,
-            ),
-        );
-    };
-
-    useEffect(() => {
-        if (inView && hasMore && !isLoading) {
-            const loadMorePosts = async () => {
-                setIsLoading(true);
-                const nextPage = page + 1;
-                const { data: newPosts, error } = await getPosts(
-                    nextPage,
-                    NUMBER_OF_POSTS_TO_FETCH,
-                    profileId,
-                );
-
-                if (error) {
-                    setIsLoading(false);
-                    return;
-                }
-
-                if (!newPosts || newPosts.length === 0) {
-                    setHasMore(false);
-                } else {
-                    setPosts((prevPosts) => [...prevPosts, ...newPosts]);
-                    setPage(nextPage);
-
-                    if (newPosts.length < NUMBER_OF_POSTS_TO_FETCH) {
-                        setHasMore(false);
-                    }
-                }
-                setIsLoading(false);
-            };
-
-            loadMorePosts();
-        }
-    }, [inView, page, hasMore, isLoading, profileId]);
+    if (posts.length === 0) {
+        return <p className="text-center">There are no posts to display.</p>
+    }
 
     return (
         <div className="flex flex-col">
             {posts.map((post) => (
-                <PostCard key={post.id} post={post} onDelete={onDeletePost} onEdit={onEditPost} />
+                <PostCard
+                    key={post.id}
+                    post={post}
+                    currentPage={currentPage}
+                />
             ))}
-
-            {hasMore && (
-                <p ref={ref} className="mt-4 text-center">
-                    Loading...
-                </p>
-            )}
         </div>
     );
 }

@@ -4,6 +4,11 @@ export interface ProfilePageProps {
     params: Promise<{
         "profile-id": string;
     }>;
+    searchParams?: Promise<{
+        page?: string;
+        filter?: string;
+        study?: string;
+    }>;
 }
 
 export interface Profile {

@@ -1,25 +1,19 @@
-import { getPosts } from "@/utils/queries/posts";
+import { getPostsPages } from "@/utils/queries/posts";
 import CreatePostModalWrapper from "./create-post-modal-wrapper";
 import PostList from "./post-list";
+import Pagination from "./pagination";
+import { Suspense } from "react";
 
 export default async function Feed({
     canPost,
+    currentPage,
     profileId,
 }: {
     canPost: boolean;
+    currentPage: number;
     profileId?: string;
 }) {
-    const { data: initialPosts, error } = await getPosts(1, 10, profileId);
-
-    let message = "";
-
-    if (error) {
-        message = error.message;
-    }
-
-    if (initialPosts.length === 0) {
-        message = "There are no posts to display.";
-    }
+    const { success, data: totalPages } = await getPostsPages(profileId);
 
     return (
         <div className="bg-container-primary flex w-full flex-col rounded-md">
@@ -27,14 +21,20 @@ export default async function Feed({
                 <h2>Feed</h2>
                 {canPost && <CreatePostModalWrapper />}
             </div>
-            {message === "" ? (
-                <PostList
-                    key={initialPosts.map((p) => p.id).join(",")}
-                    initialPosts={initialPosts}
-                    profileId={profileId}
-                />
+            {!success || totalPages === null ? (
+                <p className="form-error text-center">An error has occurred</p>
             ) : (
-                <p className="mb-2 text-center">{message}</p>
+                <div>
+                    <Suspense
+                        fallback={<p className="text-center">Loading...</p>}
+                    >
+                        <PostList
+                            profileId={profileId}
+                            currentPage={currentPage}
+                        />
+                    </Suspense>
+                    <Pagination totalPages={totalPages} />
+                </div>
             )}
         </div>
     );

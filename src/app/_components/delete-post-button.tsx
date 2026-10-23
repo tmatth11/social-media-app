@@ -1,30 +1,32 @@
+"use client";
+
 import { deletePost } from "@/actions/post-actions";
 import { Post } from "@/types";
 import { Trash } from "lucide-react";
-import { useActionState, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { useActionState } from "react";
 
 export default function DeletePostButton({
     post,
-    onDelete,
+    currentPage
 }: {
     post: Post;
-    onDelete: (id: string) => void;
+    currentPage?: number;
 }) {
-    const [state, formAction, isPending] = useActionState(deletePost, {
+    const [, formAction, isPending] = useActionState(deletePost, {
         success: false,
         message: "",
     });
 
-    useEffect(() => {
-        if (state.success) {
-            onDelete(post.id);
-        }
-    }, [state, post.id, onDelete])
+    const pathname = usePathname();
 
     return (
         <form action={formAction}>
             <input type="hidden" name="post-id" value={post.id} />
             <input type="hidden" name="author-id" value={post.user_id} />
+            {currentPage && <input type="hidden" name="current-page" value={currentPage} /> }
+            <input type="hidden" name="pathname" value={pathname} />
+            
             <button
                 className="red-icon"
                 aria-label="Delete post"

@@ -1,26 +1,21 @@
-import { useUser } from "@/hooks/use-user";
 import { Post } from "@/types";
-import { SquarePen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import DeletePostButton from "./delete-post-button";
 import EditPostModalWrapper from "./edit-post-modal-wrapper";
+import { createClient } from "@/services/supabase/server";
 
-export default function PostCard({
+export default async function PostCard({
     post,
-    onDelete,
-    onEdit,
+    currentPage,
 }: {
     post: Post;
-    onDelete: (id: string) => void;
-    onEdit: (
-        id: string,
-        newContent: string,
-        newImageUrl: string | null,
-    ) => void;
+    currentPage?: number;
 }) {
-    const { user } = useUser();
     let isOwner = false;
+
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser()
 
     if (user && user.id === post.user_id) {
         isOwner = true;
@@ -31,8 +26,8 @@ export default function PostCard({
             {/* Edit and delete buttons */}
             {isOwner && (
                 <div className="flex items-center justify-end gap-1">
-                    <EditPostModalWrapper post={post} onEdit={onEdit} />
-                    <DeletePostButton post={post} onDelete={onDelete} />
+                    <EditPostModalWrapper post={post} />
+                    <DeletePostButton post={post} currentPage={currentPage} />
                 </div>
             )}
             {/* Post header */}

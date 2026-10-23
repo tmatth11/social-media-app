@@ -18,8 +18,13 @@ export async function generateMetadata({ params }: ProfilePageProps) {
     };
 }
 
-export default async function ProfilePage({ params }: ProfilePageProps) {
+export default async function ProfilePage({ params, searchParams }: ProfilePageProps) {
     await connection();
+
+    const userSearchParams = await searchParams;
+    const currentPage = Number(userSearchParams?.page) || 1;
+
+    console.log("currentPage =", currentPage);
 
     const profile = await getCachedProfile(params);
 
@@ -42,7 +47,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     <ProfileDetails profile={profile} isOwner={isOwner} />
                 </div>
                 <div className="md:col-span-2">
-                    <Feed canPost={isOwner} profileId={profile.id} />
+                    <Feed canPost={isOwner} profileId={profile.id} currentPage={currentPage} />
                 </div>
             </div>
         </div>
