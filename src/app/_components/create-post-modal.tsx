@@ -72,8 +72,8 @@ export default function CreatePostModal({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex justify-center overflow-auto bg-black/50 p-4">
-            <div className="bg-container-primary flex h-fit w-full max-w-md flex-col rounded-lg p-4 shadow-xl">
+        <div className="fixed inset-0 z-50 flex justify-center bg-black/50 p-4">
+            <div className="bg-container-primary flex max-w-md flex-col rounded-lg p-4 shadow-xl overflow-y-auto">
                 <div className="flex justify-end">
                     <button
                         type="button"

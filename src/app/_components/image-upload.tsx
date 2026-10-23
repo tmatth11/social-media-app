@@ -62,7 +62,7 @@ export default function ImageUpload({
         <div className="flex flex-col items-center mt-4">
             <p className="font-semibold">Post image</p>
             <Image
-                className="my-2"
+                className="my-2 h-[200]"
                 src={url ? url : "/blank-image.png"}
                 alt="Post image"
                 width={300}

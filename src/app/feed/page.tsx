@@ -28,7 +28,7 @@ export default async function FeedPage(props: {
 
     return (
         <div className="flex flex-col items-center overflow-x-hidden">
-            <div className="mt-4 flex flex-col items-center md:w-3xl">
+            <div className="mt-4 flex flex-col items-center w-full md:w-3xl p-2">
                 <Feed canPost={canPost} currentPage={currentPage} />
             </div>
         </div>
