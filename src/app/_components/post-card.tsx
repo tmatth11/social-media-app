@@ -1,16 +1,23 @@
 import { useUser } from "@/hooks/use-user";
 import { Post } from "@/types";
-import { SquarePen, Trash } from "lucide-react";
+import { SquarePen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import DeletePostButton from "./delete-post-button";
+import EditPostModalWrapper from "./edit-post-modal-wrapper";
 
 export default function PostCard({
     post,
     onDelete,
+    onEdit,
 }: {
     post: Post;
     onDelete: (id: string) => void;
+    onEdit: (
+        id: string,
+        newContent: string,
+        newImageUrl: string | null,
+    ) => void;
 }) {
     const { user } = useUser();
     let isOwner = false;
@@ -24,14 +31,8 @@ export default function PostCard({
             {/* Edit and delete buttons */}
             {isOwner && (
                 <div className="flex items-center justify-end gap-1">
-                    <button
-                        className="edit-icon"
-                        aria-label="Edit post"
-                        title="Edit post"
-                    >
-                        <SquarePen />
-                    </button>
-                    <DeletePostButton postId={post.id} onDelete={onDelete} />
+                    <EditPostModalWrapper post={post} onEdit={onEdit} />
+                    <DeletePostButton post={post} onDelete={onDelete} />
                 </div>
             )}
             {/* Post header */}

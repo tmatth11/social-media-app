@@ -25,6 +25,15 @@ export interface CreatePostState {
     success?: boolean;
     errors?: ReturnType<typeof z.treeifyError>;
 }
+
+export type EditPostState =  {
+    message?: string;
+    success?: boolean;
+    errors?: ReturnType<typeof z.treeifyError>;
+    content?: string;
+    imageUrl?: string | null;
+};
+
 export interface DeletePostState {
     message?: string;
     success?: boolean;

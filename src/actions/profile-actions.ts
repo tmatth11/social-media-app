@@ -75,7 +75,7 @@ export async function editProfile(
     if (fetchError) {
         return {
             success: false,
-            message: "Error: Cannot fetch existing profile",
+            message: "Error: Cannot fetch existing profile.",
         };
     }
 
@@ -115,7 +115,7 @@ export async function editProfile(
         };
     }
 
-    // Revalidate profile page and refresh
+    // Revalidate profile page
     revalidatePath(`/profile/${profileId}`);
 
     return {

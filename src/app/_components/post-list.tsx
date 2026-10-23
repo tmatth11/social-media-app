@@ -28,6 +28,18 @@ export default function PostList({
         setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
     };
 
+    const onEditPost = (
+        postId: string,
+        newContent: string,
+        newImageUrl: string | null,
+    ) => {
+        setPosts((prevPosts) =>
+            prevPosts.map((post) =>
+                post.id === postId ? { ...post, content: newContent, image_url: newImageUrl } : post,
+            ),
+        );
+    };
+
     useEffect(() => {
         if (inView && hasMore && !isLoading) {
             const loadMorePosts = async () => {
@@ -64,7 +76,7 @@ export default function PostList({
     return (
         <div className="flex flex-col">
             {posts.map((post) => (
-                <PostCard key={post.id} post={post} onDelete={onDeletePost} />
+                <PostCard key={post.id} post={post} onDelete={onDeletePost} onEdit={onEditPost} />
             ))}
 
             {hasMore && (

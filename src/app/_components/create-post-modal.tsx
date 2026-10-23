@@ -15,7 +15,7 @@ import { createPost } from "@/actions/post-actions";
 
 const initialState: CreatePostState = {};
 
-export default function CreateEditPostModal({
+export default function CreatePostModal({
     isOpen,
     onClose,
 }: {
