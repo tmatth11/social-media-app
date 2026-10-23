@@ -25,6 +25,10 @@ export interface CreatePostState {
     success?: boolean;
     errors?: ReturnType<typeof z.treeifyError>;
 }
+export interface DeletePostState {
+    message?: string;
+    success?: boolean;
+}
 
 export interface Post {
     id: string;

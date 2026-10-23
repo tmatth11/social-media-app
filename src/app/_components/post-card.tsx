@@ -3,24 +3,19 @@ import { Post } from "@/types";
 import { SquarePen, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import DeletePostButton from "./delete-post-button";
 
 export default function PostCard({
-    id,
-    content,
-    image_url,
-    user_id,
-    author,
-    likes,
-    dislikes,
-    comments,
-    currentUserReaction,
-    hasLiked,
-    hasDisliked,
-}: Post) {
+    post,
+    onDelete,
+}: {
+    post: Post;
+    onDelete: (id: string) => void;
+}) {
     const { user } = useUser();
     let isOwner = false;
 
-    if (user && user.id === user_id) {
+    if (user && user.id === post.user_id) {
         isOwner = true;
     }
 
@@ -29,20 +24,14 @@ export default function PostCard({
             {/* Edit and delete buttons */}
             {isOwner && (
                 <div className="flex items-center justify-end gap-1">
-                    <button 
+                    <button
                         className="edit-icon"
                         aria-label="Edit post"
                         title="Edit post"
                     >
                         <SquarePen />
                     </button>
-                    <button 
-                        className="red-icon"
-                        aria-label="Delete post"
-                        title="Delete post"
-                    >
-                        <Trash />
-                    </button>
+                    <DeletePostButton postId={post.id} onDelete={onDelete} />
                 </div>
             )}
             {/* Post header */}
@@ -52,34 +41,34 @@ export default function PostCard({
                     unoptimized
                     className="h-[50] rounded-full object-cover"
                     src={
-                        author.avatar_url
-                            ? author.avatar_url
+                        post.author.avatar_url
+                            ? post.author.avatar_url
                             : "/blank-user.png"
                     }
-                    alt={`${author.username}'s profile picture`}
+                    alt={`${post.author.username}'s profile picture`}
                     width={50}
                     height={50}
                 />
                 <div>
                     {/* Author username */}
                     <Link
-                        href={`/profile/${user_id}`}
+                        href={`/profile/${post.user_id}`}
                         className="text-sm hover:underline"
                     >
-                        @{author.username}
+                        @{post.author.username}
                     </Link>
                     {/* Author display name*/}
-                    <span className="ml-2">{author.display_name}</span>
+                    <span className="ml-2">{post.author.display_name}</span>
                 </div>
             </div>
             {/* Post content */}
-            <p className="break-all">{content}</p>
+            <p className="break-all">{post.content}</p>
             {/* Post image */}
-            {image_url && (
+            {post.image_url && (
                 <Image
                     className="h-[200]"
                     unoptimized
-                    src={image_url}
+                    src={post.image_url}
                     alt="Post image"
                     width={300}
                     height={400}

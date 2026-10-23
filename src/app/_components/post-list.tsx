@@ -24,6 +24,10 @@ export default function PostList({
 
     const { ref, inView } = useInView();
 
+    const onDeletePost = (postId: string) => {
+        setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+    };
+
     useEffect(() => {
         if (inView && hasMore && !isLoading) {
             const loadMorePosts = async () => {
@@ -55,12 +59,12 @@ export default function PostList({
 
             loadMorePosts();
         }
-    }, [inView, page, hasMore, isLoading]);
+    }, [inView, page, hasMore, isLoading, profileId]);
 
     return (
         <div className="flex flex-col">
             {posts.map((post) => (
-                <PostCard key={post.id} {...post} />
+                <PostCard key={post.id} post={post} onDelete={onDeletePost} />
             ))}
 
             {hasMore && (

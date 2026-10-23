@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/services/supabase/server";
-import { CreatePostState } from "@/types";
+import { CreatePostState, DeletePostState } from "@/types";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 
@@ -72,8 +72,8 @@ export async function createPost(
 
         return {
             success: false,
-            message: "Error: Failed to create post in database."
-        }
+            message: "Error: Failed to create post in database.",
+        };
     }
 
     // Revalidate necessary pages
@@ -87,6 +87,72 @@ export async function createPost(
     };
 }
 
-export async function deletePost() {
-    
+export async function deletePost(
+    prevState: DeletePostState,
+    formData: FormData,
+) {
+    const supabase = await createClient();
+
+    const postId = formData.get("post-id") as string;
+
+    // Return unsucessful if post was not found
+    if (!postId) {
+        return {
+            success: false,
+            message: "Error: Missing post ID.",
+        };
+    }
+
+    // Fetch existing post to check for post image
+    const { data: existingPost, error: fetchError } = await supabase
+        .from("posts")
+        .select("image_url")
+        .eq("id", postId)
+        .single();
+
+    if (fetchError) {
+        return {
+            success: false,
+            message: `Error: ${fetchError.message}`,
+        };
+    }
+
+    if (!existingPost) {
+        return {
+            success: false,
+            message: "Error: Cannot fetch existing post.",
+        };
+    }
+
+    const { error } = await supabase.from("posts").delete().eq("id", postId);
+
+    // Return unsucessful if error has occurred
+    if (error) {
+        return {
+            success: false,
+            message: `Error: ${error.message}`,
+        };
+    }
+
+    // Delete post image from storage bucket if it exists
+    if (existingPost.image_url) {
+        // Extract relative path from the Supabase public URL string
+        try {
+            const urlParts = existingPost.image_url.split("/post_images/");
+            if (urlParts.length > 1) {
+                const oldStoragePath = urlParts[1];
+
+                await supabase.storage
+                    .from("post_images")
+                    .remove([oldStoragePath]);
+            }
+        } catch (storageError) {
+            console.error("Error:", storageError);
+        }
+    }
+
+    return {
+        success: true,
+        message: "",
+    };
 }
