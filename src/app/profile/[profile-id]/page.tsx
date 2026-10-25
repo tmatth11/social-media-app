@@ -24,8 +24,6 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
     const userSearchParams = await searchParams;
     const currentPage = Number(userSearchParams?.page) || 1;
 
-    console.log("currentPage =", currentPage);
-
     const profile = await getCachedProfile(params);
 
     const supabase = await createClient();

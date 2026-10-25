@@ -4,6 +4,8 @@ import Link from "next/link";
 import DeletePostButton from "./delete-post-button";
 import EditPostModalWrapper from "./edit-post-modal-wrapper";
 import { createClient } from "@/services/supabase/server";
+import { ThumbsDown, ThumbsUp } from "lucide-react";
+import UserReactions from "./user-reactions";
 
 export default async function PostCard({
     post,
@@ -70,6 +72,8 @@ export default async function PostCard({
                     height={400}
                 />
             )}
+            {/* User reactions */}
+            <UserReactions post={post} />
         </div>
     );
 }
