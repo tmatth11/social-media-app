@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@source "../app/**/*.{ts,tsx}";
+@source "../src/**/*.{js,ts,jsx,tsx,mdx}";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -13,7 +13,7 @@
     --clr-link-hover: var(--color-gray-200);
     --clr-container-primary: var(--color-neutral-200);
     --clr-text-input: var(--color-neutral-300);
-
+    --clr-reaction: var(--color-black);
 }
 
 .dark {
@@ -24,6 +24,7 @@
     --clr-link-hover: var(--color-gray-400);
     --clr-container-primary: var(--color-slate-700);
     --clr-text-input: var(--color-slate-800);
+    --clr-reaction: var(--color-white);
 }
 
 /* Theme */
@@ -41,6 +42,7 @@
     --color-container-primary: var(--clr-container-primary);
     --color-text-input: var(--clr-text-input);
     --color-error: var(--color-red-500);
+    --color-reaction: var(--clr-reaction);
 }
 
 /* Headings */
@@ -103,6 +105,14 @@ h4 {
 
 .red-icon {
     @apply cursor-pointer enabled:hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.edit-icon {
+    @apply cursor-pointer enabled:hover:text-gray-500 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.reaction-icon {
+    @apply flex items-center gap-2 cursor-pointer;
 }
 
 /* Links */

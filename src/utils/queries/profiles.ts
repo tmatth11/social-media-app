@@ -1,3 +1,5 @@
+"use server";
+
 import { createClient } from "@/services/supabase/server";
 import { cache } from "react";
 

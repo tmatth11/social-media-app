@@ -26,7 +26,7 @@ export async function editProfile(
         error,
     } = await supabase.auth.getUser();
 
-    // Return error if user is authenticated
+    // Return error if user is not authenticated
     if (error || !user) {
         return {
             success: false,
@@ -65,7 +65,37 @@ export async function editProfile(
         };
     }
 
-    // Update profile data
+    // Fetch existing profile to check for old avatar URL
+    const { data: existingProfile, error: fetchError } = await supabase
+        .from("profiles")
+        .select("avatar_url")
+        .eq("id", profileId)
+        .single();
+
+    if (fetchError) {
+        return {
+            success: false,
+            message: "Error: Cannot fetch existing profile.",
+        };
+    }
+
+    // Delete old avatar URL if user is changing theirs
+    if (existingProfile.avatar_url && existingProfile.avatar_url !== avatarUrl) {
+        // Extract relative path from the Supabase public URL string
+        try {
+            const urlParts = existingProfile.avatar_url.split("/avatars/");
+            if (urlParts.length > 1) {
+                const oldStoragePath = urlParts[1];
+
+                await supabase.storage.from("avatars").remove([oldStoragePath]);
+            }
+        }
+        catch (storageError) {
+            console.error("Error:", storageError);
+        }
+    }
+
+    // Update profile data with new values
     const { error: updateError } = await supabase
         .from("profiles")
         .update({
@@ -81,8 +111,8 @@ export async function editProfile(
 
         return {
             success: false,
-            message: "Error: Failed to update profile in database."
-        }
+            message: "Error: Failed to update profile in database.",
+        };
     }
 
     // Revalidate profile page
@@ -90,6 +120,6 @@ export async function editProfile(
 
     return {
         success: true,
-        message: "Profile updated successfully"
-    }
+        message: "Success: Profile updated successfully",
+    };
 }

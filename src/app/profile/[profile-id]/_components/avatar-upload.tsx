@@ -2,7 +2,7 @@
 "use client";
 
 import { createClient } from "@/services/supabase/client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 export default function AvatarUpload({
@@ -12,64 +12,11 @@ export default function AvatarUpload({
 }: {
     profileId: string;
     url: string | null;
-    onUpload: (event: React.ChangeEvent<HTMLInputElement>, url: string) => void;
+    onUpload: (filePath: string, publicUrl: string) => void;
 }) {
-    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [uploading, setUploading] = useState(false);
-
-    // References the file input element
     const fileInputRef = useRef<HTMLInputElement>(null);
-
-    // Initializes supabase client exactly once
     const supabase = useMemo(() => createClient(), []);
-
-    useEffect(() => {
-        let objectUrl: string | null = null;
-        let cancelled = false;
-
-        // Download image from avatar bucket and set avatar URL
-        async function downloadImage(path: string) {
-            try {
-                const { data, error } = await supabase.storage
-                    .from("avatars")
-                    .download(path);
-
-                if (error) {
-                    throw error;
-                }
-
-                objectUrl = URL.createObjectURL(data);
-
-                if (cancelled) {
-                    URL.revokeObjectURL(objectUrl);
-                    return;
-                }
-
-                setAvatarUrl(objectUrl);
-            } catch (error) {
-                const errorMessage =
-                    error instanceof Error
-                        ? error.message
-                        : "An unknown database error occurred";
-
-                if (!cancelled) {
-                    console.error("Error downloading image:", errorMessage);
-                }
-            }
-        }
-
-        if (url) {
-            void downloadImage(url);
-        }
-
-        return () => {
-            cancelled = true;
-
-            if (objectUrl) {
-                URL.revokeObjectURL(objectUrl);
-            }
-        };
-    }, [url, supabase]);
 
     async function uploadAvatar(event: React.ChangeEvent<HTMLInputElement>) {
         try {
@@ -94,8 +41,10 @@ export default function AvatarUpload({
                 throw uploadError;
             }
 
-            setAvatarUrl(URL.createObjectURL(file));
-            onUpload(event, filePath);
+            const { data } = supabase.storage
+                .from("avatars")
+                .getPublicUrl(filePath);
+            onUpload(filePath, data.publicUrl);
         } catch (error) {
             const errorMessage =
                 error instanceof Error
@@ -112,12 +61,12 @@ export default function AvatarUpload({
         <div className="flex flex-col items-center">
             <p className="font-semibold">Profile Picture</p>
             <Image
-                className="my-2 rounded-full"
-                src={avatarUrl ? avatarUrl : "/blank-user.png"}
+                className="my-2 h-25 rounded-full object-cover"
+                src={url ? url : "/blank-user.png"}
                 alt="User avatar"
-                width="100"
-                height="100"
-                unoptimized={avatarUrl?.startsWith("blob:")}
+                width={100}
+                height={100}
+                unoptimized={url?.startsWith("blob:")}
             />
             <button
                 type="button"

@@ -1,0 +1,2 @@
+ALTER TABLE public.reactions ADD COLUMN reaction_type TEXT NOT NULL CHECK (reaction_type IN ('like', 'dislike'));
+ALTER TABLE public.reactions ADD CONSTRAINT unique_post_user_reaction UNIQUE (post_id, user_id);

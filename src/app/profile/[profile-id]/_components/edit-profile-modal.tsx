@@ -1,10 +1,17 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useActionState, useEffect, useState } from "react";
+import {
+    useActionState,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import { EditProfileState, Profile } from "@/types";
 import { editProfile } from "@/actions/profile-actions";
 import AvatarUpload from "./avatar-upload";
+import { createClient } from "@/services/supabase/client";
 
 const initialState: EditProfileState = {};
 
@@ -18,23 +25,44 @@ export default function EditProfileModal({
     onClose: () => void;
 }) {
     const [displayName, setDisplayName] = useState(profile.display_name);
-    const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url);
+    const [avatarPath, setAvatarPath] = useState<string | null>(null);
+    const [avatarPreviewUrl, setAvatarPreviewUrl] = useState(profile.avatar_url);
 
     const [state, formAction, isPending] = useActionState<
         EditProfileState,
         FormData
     >(editProfile, initialState);
 
+    const supabase = useMemo(() => createClient(), []);
+
+    const handleCancelAndClose = useCallback(async () => {
+        if (avatarPath) {
+            try {
+                await supabase.storage.from("avatars").remove([avatarPath]);
+            } catch (error) {
+                console.error(
+                    "Failed to delete orphaned image from storage:",
+                    error,
+                );
+            }
+        }
+
+        onClose();
+    }, [avatarPath, supabase, onClose]);
+
     useEffect(() => {
         if (state?.success) {
             onClose();
+            window.location.reload();
         }
     }, [onClose, state?.success]);
 
     useEffect(() => {
+        if (!isOpen) return;
+
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
-                onClose();
+                handleCancelAndClose();
             }
         };
 
@@ -43,7 +71,7 @@ export default function EditProfileModal({
         return () => {
             window.removeEventListener("keydown", handleEscape);
         };
-    }, [onClose]);
+    }, [isOpen, handleCancelAndClose]);
 
     if (!isOpen) return null;
 
@@ -51,12 +79,12 @@ export default function EditProfileModal({
         <div className="fixed inset-0 z-50 flex justify-center bg-black/50 p-4">
             <div
                 key={`${profile.id}-${isOpen}`}
-                className="bg-container-primary flex h-fit w-full max-w-md flex-col rounded-lg p-4 shadow-xl"
+                className="bg-container-primary flex w-full max-w-md flex-col rounded-lg p-4 shadow-xl overflow-y-auto"
             >
                 <div className="flex justify-end">
                     <button
                         type="button"
-                        onClick={onClose}
+                        onClick={handleCancelAndClose}
                         aria-label="Close edit profile modal"
                         title="Close edit profile modal"
                         className="red-icon"
@@ -76,14 +104,15 @@ export default function EditProfileModal({
                     <input
                         type="hidden"
                         name="avatar-url"
-                        value={avatarUrl || ""}
+                        value={avatarPreviewUrl || ""}
                     />
                     <AvatarUpload
                         key={`${profile.id}-${isOpen}`}
                         profileId={profile.id}
-                        url={avatarUrl}
-                        onUpload={(event, filePath) => {
-                            setAvatarUrl(filePath);
+                        url={avatarPreviewUrl}
+                        onUpload={(filePath, publicUrl) => {
+                            setAvatarPath(filePath);
+                            setAvatarPreviewUrl(publicUrl);
                         }}
                     />
                     <div className="form-group">

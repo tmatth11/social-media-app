@@ -1,7 +1,6 @@
 import { Profile } from "@/types";
 import Image from "next/image";
 import EditProfileModalWrapper from "./edit-profile-modal-wrapper";
-import { createClient } from "@/services/supabase/server";
 
 export default async function ProfileDetails({
     profile,
@@ -10,26 +9,15 @@ export default async function ProfileDetails({
     profile: Profile;
     isOwner: boolean;
 }) {
-    const supabase = await createClient();
-
-    const baseAvatarUrl = profile.avatar_url
-        ? supabase.storage.from("avatars").getPublicUrl(profile.avatar_url).data
-            .publicUrl
-        : null;
-
-    const avatarSrc = baseAvatarUrl
-        ? `${baseAvatarUrl}?t=${new Date(profile.updated_at).getTime()}`
-        : "/blank-user.png";
-
     return (
-        <div className="flex flex-col items-center gap-2 p-4">
+        <div className="flex flex-col items-center gap-2 p-4 md:fixed">
             <Image
                 unoptimized
-                className="rounded-full"
-                src={avatarSrc}
+                className="h-25 rounded-full object-cover"
+                src={profile.avatar_url ? profile.avatar_url : "/blank-user.png"}
                 alt={`${profile.username}'s profile picture`}
-                width="100"
-                height="100"
+                width={100}
+                height={100}
             />
             <div>
                 <h3>{profile.display_name}</h3>
