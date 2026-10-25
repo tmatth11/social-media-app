@@ -4,8 +4,8 @@ import Link from "next/link";
 import DeletePostButton from "./delete-post-button";
 import EditPostModalWrapper from "./edit-post-modal-wrapper";
 import { createClient } from "@/services/supabase/server";
-import { ThumbsDown, ThumbsUp } from "lucide-react";
-import UserReactions from "./user-reactions";
+import LikeButton from "./like-button";
+import DislikeButton from "./dislike-button";
 
 export default async function PostCard({
     post,
@@ -17,7 +17,9 @@ export default async function PostCard({
     let isOwner = false;
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser()
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
 
     if (user && user.id === post.user_id) {
         isOwner = true;
@@ -73,7 +75,10 @@ export default async function PostCard({
                 />
             )}
             {/* User reactions */}
-            <UserReactions post={post} />
+            <div className="flex items-center justify-end gap-2">
+                <LikeButton post={post} />
+                <DislikeButton post={post} />
+            </div>
         </div>
     );
 }

@@ -58,7 +58,9 @@ export interface Post {
     likes: number;
     dislikes: number;
     comments: number;
-    currentUserReaction: string;
+    currentUserReaction: string | null;
     hasLiked: boolean;
     hasDisliked: boolean;
 }
+
+export type reactionType = "like" | "dislike";
