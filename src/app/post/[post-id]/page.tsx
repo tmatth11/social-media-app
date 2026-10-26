@@ -3,7 +3,7 @@ import { createClient } from "@/services/supabase/server";
 import { PostPageProps } from "@/types";
 import { getCachedPost } from "@/utils/helpers";
 import { connection } from "next/server";
-import CommentBoxWrapper from "./_components/comment-box-wrapper";
+import CommentBox from "./_components/comment-box";
 
 export const instant = false;
 
@@ -44,8 +44,6 @@ export default async function PostPage({
         userSearchParams?.["comment-box"] === "open" && !error && user,
     );
 
-    console.log("commentBoxOpen =", commentBoxOpen);
-
     const post = await getCachedPost(params);
     
     return (
@@ -54,7 +52,7 @@ export default async function PostPage({
                 {/* Post card wrapper */}
                 <div className="bg-container-primary rounded-md">
                     <PostCard post={post} />
-                    <CommentBoxWrapper postId={post.id} commentBoxOpen={commentBoxOpen} />
+                    {commentBoxOpen && <CommentBox postId={post.id} />}
                 </div>
                 {/* TODO: Create comment list */}
                 

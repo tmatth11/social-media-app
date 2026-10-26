@@ -1,7 +1,7 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function CommentButton({
     postId,
@@ -13,10 +13,20 @@ export default function CommentButton({
     cantReact: boolean;
 }) {
     const { push } = useRouter();
+    const searchParams = useSearchParams();
+    const commentBoxOpen = searchParams.has("comment-box");
+
+    const handleToggle = () => {
+        if (commentBoxOpen) {
+            push(`/post/${postId}`);
+        } else {
+            push(`/post/${postId}?comment-box=open`);
+        }
+    };
 
     return (
         <button
-            onClick={() => push(`/post/${postId}?comment-box=open`)}
+            onClick={handleToggle}
             disabled={cantReact}
             className="reaction-icon"
         >
