@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: PostPageProps) {
     };
 }
 
-export default async function PostPage() {
+export default async function PostPage({ params, searchParams }: PostPageProps) {
     await connection();
 
     return (

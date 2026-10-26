@@ -112,7 +112,7 @@ h4 {
 }
 
 .reaction-icon {
-    @apply flex items-center gap-2 cursor-pointer;
+    @apply flex items-center gap-2 enabled:cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed;
 }
 
 /* Links */

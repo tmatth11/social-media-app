@@ -2,7 +2,13 @@ import { toggleReaction } from "@/actions/reaction-actions";
 import { Post } from "@/types";
 import { ThumbsUp } from "lucide-react";
 
-export default function LikeButton({ post }: { post: Post }) {
+export default function LikeButton({
+    post,
+    cantReact,
+}: {
+    post: Post;
+    cantReact: boolean;
+}) {
     const toggleReactionAction = toggleReaction.bind(
         null,
         post.id,
@@ -13,7 +19,7 @@ export default function LikeButton({ post }: { post: Post }) {
 
     return (
         <form action={toggleReactionAction}>
-            <button className="reaction-icon">
+            <button className="reaction-icon" disabled={cantReact}>
                 <ThumbsUp className={`${post.hasLiked && "fill-reaction"}`} />
                 {post.likes}
             </button>

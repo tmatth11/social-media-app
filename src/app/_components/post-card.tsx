@@ -26,6 +26,12 @@ export default async function PostCard({
         isOwner = true;
     }
 
+    let cantReact = false;
+
+    if (!user) {
+        cantReact = true;
+    }
+
     return (
         <div className="flex flex-col gap-2 border-b p-2 last:border-b-0">
             {/* Edit and delete buttons */}
@@ -83,8 +89,8 @@ export default async function PostCard({
                     <MessageCircle />
                     {post.comments}
                 </div>
-                <LikeButton post={post} />
-                <DislikeButton post={post} />
+                <LikeButton post={post} cantReact={cantReact} />
+                <DislikeButton post={post} cantReact={cantReact} />
             </div>
         </div>
     );
