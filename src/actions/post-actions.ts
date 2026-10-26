@@ -67,7 +67,7 @@ export async function createPost(
         })
         .select()
         .single();
-
+        
     // Return error if insert operation has failed
     if (insertError || !postData) {
         console.error("Error:", insertError?.message || "No data returned");

@@ -62,19 +62,21 @@ export default async function PostCard({
                     <span className="ml-2">{post.author.display_name}</span>
                 </div>
             </div>
-            {/* Post content */}
-            <p className="break-all">{post.content}</p>
-            {/* Post image */}
-            {post.image_url && (
-                <Image
-                    className="h-[200]"
-                    unoptimized
-                    src={post.image_url}
-                    alt="Post image"
-                    width={300}
-                    height={400}
-                />
-            )}
+            <Link href={`/post/${post.id}`}>
+                {/* Post content */}
+                <p className="break-all mb-2">{post.content}</p>
+                {/* Post image */}
+                {post.image_url && (
+                    <Image
+                        className="h-[200]"
+                        unoptimized
+                        src={post.image_url}
+                        alt="Post image"
+                        width={300}
+                        height={400}
+                    />
+                )}
+            </Link>
             {/* User reactions */}
             <div className="flex items-center justify-end gap-2">
                 <div className="reaction-icon">

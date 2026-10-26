@@ -6,8 +6,6 @@ export interface ProfilePageProps {
     }>;
     searchParams?: Promise<{
         page?: string;
-        filter?: string;
-        study?: string;
     }>;
 }
 
@@ -64,3 +62,14 @@ export interface Post {
 }
 
 export type reactionType = "like" | "dislike";
+export type commentBox = "open";
+
+export interface PostPageProps {
+    params: Promise<{
+        "post-id": string;
+    }>;
+    searchParams?: Promise<{
+        "comment-box"?: commentBox;
+        "page"?: string;
+    }>;
+}
