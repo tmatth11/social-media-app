@@ -45,6 +45,7 @@ export async function updateSession(request: NextRequest) {
         request.nextUrl.pathname !== "/" &&
         request.nextUrl.pathname !== "/feed" &&
         !request.nextUrl.pathname.startsWith("/profile") &&
+        !request.nextUrl.pathname.startsWith("/post") &&
         !request.nextUrl.pathname.startsWith("/login") &&
         !request.nextUrl.pathname.startsWith("/auth") &&
         // the OAuth consent route sends unauthenticated visitors to the login page

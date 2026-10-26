@@ -1,3 +1,5 @@
+import PostCard from "@/app/_components/post-card";
+import { createClient } from "@/services/supabase/server";
 import { PostPageProps } from "@/types";
 import { getCachedPost } from "@/utils/helpers";
 import { connection } from "next/server";
@@ -7,9 +9,9 @@ export const instant = false;
 export async function generateMetadata({ params }: PostPageProps) {
     await connection();
 
-    const { content, profiles } = await getCachedPost(params);
+    const { content, author } = await getCachedPost(params);
 
-    const author = profiles.username;
+    const authorUsername = author.username;
 
     let pageTitle = content;
     const maxLength = 12;
@@ -19,16 +21,42 @@ export async function generateMetadata({ params }: PostPageProps) {
 
     return {
         title: pageTitle,
-        description: `A post from ${author}`,
+        description: `A post from ${authorUsername}`,
     };
 }
 
-export default async function PostPage({ params, searchParams }: PostPageProps) {
+export default async function PostPage({
+    params,
+    searchParams,
+}: PostPageProps) {
     await connection();
 
+    const userSearchParams = await searchParams;
+
+    const supabase = await createClient();
+    const {
+        data: { user },
+        error,
+    } = await supabase.auth.getUser();
+
+    const commentBoxOpen = Boolean(
+        userSearchParams?.["comment-box"] === "open" && !error && user,
+    );
+
+    console.log("commentBoxOpen =", commentBoxOpen);
+
+    const post = await getCachedPost(params);
+
     return (
-        <>
-            <p>PostPage works!</p>
-        </>
+        <div className="flex flex-col items-center p-2">
+            <div className="w-full md:max-w-3xl">
+                {/* Post card wrapper */}
+                <div className="bg-container-primary rounded-md">
+                    <PostCard post={post} />
+                    {/* TODO: Create comment box */}
+                </div>
+                {/* TODO: Create comment list */}
+            </div>
+        </div>
     );
 }

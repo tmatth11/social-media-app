@@ -33,10 +33,7 @@ export async function getPostsPages(profileId?: string) {
     };
 }
 
-export const getPosts = async (
-    currentPage: number,
-    profileId?: string,
-) => {
+export const getPosts = async (currentPage: number, profileId?: string) => {
     const supabase = await createClient();
 
     const {
@@ -168,8 +165,7 @@ export const getPost = async (postId: string) => {
         );
     }
 
-    const { data: post, error } = await query
-        .single();
+    const { data: post, error } = await query.single();
 
     if (error) {
         console.error("Error:", error);
@@ -177,5 +173,22 @@ export const getPost = async (postId: string) => {
         return { data: null, error };
     }
 
-    return { data: post, error: null };
+    const currentUserReactionType =
+        post.user_reaction?.[0]?.reaction_type ?? null;
+
+    const formattedPost = {
+        id: post.id,
+        content: post.content,
+        image_url: post.image_url,
+        user_id: post.user_id,
+        author: post.profiles,
+        likes: post.likes?.[0]?.count ?? 0,
+        dislikes: post.dislikes?.[0]?.count ?? 0,
+        comments: post.comments?.[0]?.count ?? 0,
+        currentUserReaction: currentUserReactionType,
+        hasLiked: currentUserReactionType === "like",
+        hasDisliked: currentUserReactionType === "dislike",
+    };
+
+    return { data: formattedPost, error: null };
 };
