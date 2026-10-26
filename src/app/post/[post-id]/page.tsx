@@ -4,7 +4,6 @@ import { PostPageProps } from "@/types";
 import { getCachedPost } from "@/utils/helpers";
 import { connection } from "next/server";
 import CommentBoxWrapper from "./_components/comment-box-wrapper";
-import { redirect } from "next/navigation";
 
 export const instant = false;
 

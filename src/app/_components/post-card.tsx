@@ -6,7 +6,6 @@ import EditPostModalWrapper from "./edit-post-modal-wrapper";
 import { createClient } from "@/services/supabase/server";
 import LikeButton from "./like-button";
 import DislikeButton from "./dislike-button";
-import { MessageCircle } from "lucide-react";
 import CommentButton from "./comment-button";
 
 export default async function PostCard({
@@ -89,6 +88,7 @@ export default async function PostCard({
                 <CommentButton
                     postId={post.id}
                     numberOfComments={post.comments}
+                    cantReact={cantReact}
                 />
                 <LikeButton post={post} cantReact={cantReact} />
                 <DislikeButton post={post} cantReact={cantReact} />
