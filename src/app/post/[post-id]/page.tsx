@@ -3,6 +3,8 @@ import { createClient } from "@/services/supabase/server";
 import { PostPageProps } from "@/types";
 import { getCachedPost } from "@/utils/helpers";
 import { connection } from "next/server";
+import CommentBoxWrapper from "./_components/comment-box-wrapper";
+import { redirect } from "next/navigation";
 
 export const instant = false;
 
@@ -46,16 +48,17 @@ export default async function PostPage({
     console.log("commentBoxOpen =", commentBoxOpen);
 
     const post = await getCachedPost(params);
-
+    
     return (
         <div className="flex flex-col items-center p-2">
             <div className="w-full md:max-w-3xl">
                 {/* Post card wrapper */}
                 <div className="bg-container-primary rounded-md">
                     <PostCard post={post} />
-                    {/* TODO: Create comment box */}
+                    <CommentBoxWrapper postId={post.id} commentBoxOpen={commentBoxOpen} />
                 </div>
                 {/* TODO: Create comment list */}
+                
             </div>
         </div>
     );

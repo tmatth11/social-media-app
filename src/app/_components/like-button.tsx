@@ -19,7 +19,7 @@ export default function LikeButton({
 
     return (
         <form action={toggleReactionAction}>
-            <button className="reaction-icon" disabled={cantReact}>
+            <button className="reaction-icon" disabled={cantReact} title="Like post" aria-label="Like post">
                 <ThumbsUp className={`${post.hasLiked && "fill-reaction"}`} />
                 {post.likes}
             </button>

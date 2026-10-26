@@ -19,7 +19,7 @@ export default function DislikeButton({
 
     return (
         <form action={toggleReactionAction}>
-            <button className="reaction-icon" disabled={cantReact}>
+            <button className="reaction-icon" disabled={cantReact} title="Dislike post" aria-label="Dislike post">
                 <ThumbsDown
                     className={`${post.hasDisliked && "fill-reaction"}`}
                 />

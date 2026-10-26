@@ -7,6 +7,7 @@ import { createClient } from "@/services/supabase/server";
 import LikeButton from "./like-button";
 import DislikeButton from "./dislike-button";
 import { MessageCircle } from "lucide-react";
+import CommentButton from "./comment-button";
 
 export default async function PostCard({
     post,
@@ -33,7 +34,7 @@ export default async function PostCard({
     }
 
     return (
-        <div className="flex flex-col gap-2 border-b p-2 last:border-b-0">
+        <div className="flex flex-col gap-2 p-2">
             {/* Edit and delete buttons */}
             {isOwner && (
                 <div className="flex items-center justify-end gap-1">
@@ -70,7 +71,7 @@ export default async function PostCard({
             </div>
             <Link href={`/post/${post.id}`}>
                 {/* Post content */}
-                <p className="break-all mb-2">{post.content}</p>
+                <p className="mb-2 break-all">{post.content}</p>
                 {/* Post image */}
                 {post.image_url && (
                     <Image
@@ -85,10 +86,10 @@ export default async function PostCard({
             </Link>
             {/* User reactions */}
             <div className="flex items-center justify-end gap-2">
-                <div className="reaction-icon">
-                    <MessageCircle />
-                    {post.comments}
-                </div>
+                <CommentButton
+                    postId={post.id}
+                    numberOfComments={post.comments}
+                />
                 <LikeButton post={post} cantReact={cantReact} />
                 <DislikeButton post={post} cantReact={cantReact} />
             </div>
