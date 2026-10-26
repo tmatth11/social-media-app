@@ -73,3 +73,9 @@ export interface PostPageProps {
         "page"?: string;
     }>;
 }
+
+export interface CreateCommentState {
+    message?: string;
+    success?: boolean;
+    errors?: ReturnType<typeof z.treeifyError>;
+}
