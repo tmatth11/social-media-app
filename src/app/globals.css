@@ -84,15 +84,15 @@ h4 {
 /* Buttons */
 
 .btn {
-    @apply p-2 rounded-md text-center font-semibold enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-75;
+    @apply p-2 rounded-md text-center font-semibold enabled:cursor-pointer disabled:cursor-not-allowed;
 }
 
 .btn-primary {
-    @apply bg-btn-primary hover:bg-btn-primary-hover disabled:hover:bg-btn-primary text-white;
+    @apply bg-btn-primary hover:bg-btn-primary-hover disabled:bg-btn-primary/75 disabled:hover:bg-btn-primary/75 text-white;
 }
 
 .btn-secondary {
-    @apply bg-btn-secondary hover:bg-btn-secondary-hover disabled:hover:bg-btn-secondary text-white;
+    @apply bg-btn-secondary hover:bg-btn-secondary-hover disabled:hover:bg-btn-secondary/75 text-white;
 }
 
 .btn-destructive {
@@ -112,7 +112,7 @@ h4 {
 }
 
 .reaction-icon {
-    @apply flex items-center gap-2 cursor-pointer;
+    @apply flex items-center gap-2 enabled:cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed;
 }
 
 /* Links */

@@ -6,8 +6,6 @@ export interface ProfilePageProps {
     }>;
     searchParams?: Promise<{
         page?: string;
-        filter?: string;
-        study?: string;
     }>;
 }
 
@@ -64,3 +62,44 @@ export interface Post {
 }
 
 export type reactionType = "like" | "dislike";
+export type commentBox = "open";
+
+export interface PostPageProps {
+    params: Promise<{
+        "post-id": string;
+    }>;
+    searchParams?: Promise<{
+        "comment-box"?: commentBox;
+        "page"?: string;
+    }>;
+}
+
+export interface CreateCommentState {
+    message?: string;
+    success?: boolean;
+    errors?: ReturnType<typeof z.treeifyError>;
+}
+
+export interface Comment {
+    id: string;
+    content: string;
+    post_id: string;
+    user_id: string;
+    author: {
+        username: string;
+        display_name: string;
+        avatar_url: string | null;
+        updated_at: string;
+    };
+}
+
+export type EditCommentState =  {
+    message?: string;
+    success?: boolean;
+    errors?: ReturnType<typeof z.treeifyError>;
+};
+
+export interface DeleteCommentState {
+    message?: string;
+    success?: boolean;
+}

@@ -22,7 +22,7 @@ export default async function PostList({
     }
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col divide-y">
             {posts.map((post) => (
                 <PostCard
                     key={post.id}
