@@ -24,7 +24,7 @@ export default async function Feed({
             {!success || totalPages === null ? (
                 <p className="form-error text-center">An error has occurred</p>
             ) : (
-                <div>
+                <>
                     <Suspense
                         fallback={<p className="text-center">Loading...</p>}
                     >
@@ -34,7 +34,7 @@ export default async function Feed({
                         />
                     </Suspense>
                     <Pagination totalPages={totalPages} />
-                </div>
+                </>
             )}
         </div>
     );

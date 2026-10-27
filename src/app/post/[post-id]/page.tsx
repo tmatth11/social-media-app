@@ -4,6 +4,7 @@ import { PostPageProps } from "@/types";
 import { getCachedPost } from "@/utils/helpers";
 import { connection } from "next/server";
 import CommentBox from "./_components/comment-box";
+import CommentListWrapper from "./_components/comment-list-wrapper";
 
 export const instant = false;
 
@@ -33,6 +34,7 @@ export default async function PostPage({
     await connection();
 
     const userSearchParams = await searchParams;
+    const currentPage = Number(userSearchParams?.page) || 1;
 
     const supabase = await createClient();
     const {
@@ -54,8 +56,7 @@ export default async function PostPage({
                     <PostCard post={post} />
                     {commentBoxOpen && <CommentBox postId={post.id} />}
                 </div>
-                {/* TODO: Create comment list */}
-                
+                <CommentListWrapper currentPage={currentPage} postId={post.id} />
             </div>
         </div>
     );
