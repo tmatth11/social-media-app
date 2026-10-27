@@ -44,7 +44,9 @@ export default function CommentBox({ postId }: { postId: string }) {
                     </div>
                     <div className="my-4 flex items-center justify-center">
                         {!state?.success && (
-                            <p className="form-error">{state?.message}</p>
+                            <p className="form-error">
+                                {state?.message}
+                            </p>
                         )}
                     </div>
                     {/* Submit button */}

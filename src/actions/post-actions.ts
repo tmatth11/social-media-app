@@ -272,7 +272,7 @@ export async function editPost(
         };
     }
 
-    // Fetch existing post to check for old avatar URL
+    // Fetch existing post to check for old image URL
     const { data: existingPost, error: fetchError } = await supabase
         .from("posts")
         .select("image_url")
@@ -318,7 +318,7 @@ export async function editPost(
 
         return {
             success: false,
-            message: "Error: Failed to update profile in database.",
+            message: "Error: Failed to update post image in database.",
         };
     }
 

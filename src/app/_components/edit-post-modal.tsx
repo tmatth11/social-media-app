@@ -116,7 +116,7 @@ export default function EditPostModal({
                                 id="content"
                                 name="content"
                                 type="text"
-                                placeholder="Enter display name"
+                                placeholder="Enter post content"
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)}
                                 required

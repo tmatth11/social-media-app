@@ -92,3 +92,9 @@ export interface Comment {
         updated_at: string;
     };
 }
+
+export type EditCommentState =  {
+    message?: string;
+    success?: boolean;
+    errors?: ReturnType<typeof z.treeifyError>;
+};

@@ -2,6 +2,7 @@ import { createClient } from "@/services/supabase/server";
 import { Comment } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
+import EditCommentModalWrapper from "./edit-comment-modal-wrapper";
 
 export default async function CommentCard({
     comment,
@@ -23,6 +24,13 @@ export default async function CommentCard({
 
     return (
         <div className="flex flex-col gap-2 p-2">
+            {/* Edit and delete buttons */}
+            {isOwner && (
+                <div className="flex items-center justify-end gap-1">
+                    <EditCommentModalWrapper comment={comment} />
+                    {/* DeleteCommentButton goes here */}
+                </div>
+            )}
             {/* Comment header */}
             <div className="flex items-center gap-2">
                 {/* Author avatar */}
