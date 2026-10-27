@@ -1,7 +1,8 @@
 "use server";
 
 import { createClient } from "@/services/supabase/server";
-import { CreateCommentState, EditCommentState } from "@/types";
+import { CreateCommentState, DeleteCommentState, EditCommentState } from "@/types";
+import { getCommentsPages } from "@/utils/queries/comments";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import z from "zod";
@@ -77,6 +78,80 @@ export async function createComment(
     // Revalidate necessary pages
     revalidatePath(`/post/${postId}`);
     redirect(`/post/${postId}`);
+}
+
+export async function deleteComment(
+    prevState: DeleteCommentState,
+    formData: FormData,
+) {
+    const supabase = await createClient();
+
+    // Get currently user logged in user
+    const {
+        data: { user },
+        error: authError,
+    } = await supabase.auth.getUser();
+
+    // Return error if user is not authenticated
+    if (authError || !user) {
+        return {
+            success: false,
+            message: "Error: User is not authenticated.",
+        };
+    }
+
+    const commentId = formData.get("comment-id") as string;
+    const postId = formData.get("post-id") as string;
+    const authorId = formData.get("author-id") as string;
+    const pathName = formData.get("pathname") as string;
+    const rawCurrentPage = formData.get("current-page");
+
+    const currentPage: number | null =
+        rawCurrentPage !== null ? Number(rawCurrentPage) : null;
+
+    // Return error is user does not own comment
+    if (authorId !== user.id) {
+        return {
+            success: false,
+            message: "Error: User does not own comment.",
+        };
+    }
+
+    const { error } = await supabase.from("comments").delete().eq("id", commentId);
+
+    // Return unsucessful if error has occurred
+    if (error) {
+        return {
+            success: false,
+            message: `Error: ${error.message}`,
+        };
+    }
+
+    // Revalidate necessary pages
+    revalidatePath(`/post/${postId}`);
+
+    // Reset filters and update page count if on invalid page
+    if (currentPage === null) {
+        redirect(`/post/${postId}`);
+    } else {
+        const { data: totalPages, success } = await getCommentsPages(postId);
+
+        if (!success || totalPages === null) {
+            redirect("/feed");
+        }
+
+        if (currentPage > totalPages && totalPages > 0) {
+            const params = new URLSearchParams();
+            params.set("page", totalPages.toString());
+
+            redirect(`${pathName}?${params.toString()}`);
+        }
+    }
+
+    return {
+        success: true,
+        message: "",
+    };
 }
 
 const editCommentSchema = z.object({

@@ -98,3 +98,8 @@ export type EditCommentState =  {
     success?: boolean;
     errors?: ReturnType<typeof z.treeifyError>;
 };
+
+export interface DeleteCommentState {
+    message?: string;
+    success?: boolean;
+}

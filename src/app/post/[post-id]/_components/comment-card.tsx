@@ -3,6 +3,7 @@ import { Comment } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import EditCommentModalWrapper from "./edit-comment-modal-wrapper";
+import DeleteCommentButton from "./delete-comment-button";
 
 export default async function CommentCard({
     comment,
@@ -28,7 +29,7 @@ export default async function CommentCard({
             {isOwner && (
                 <div className="flex items-center justify-end gap-1">
                     <EditCommentModalWrapper comment={comment} />
-                    {/* DeleteCommentButton goes here */}
+                    <DeleteCommentButton comment={comment} currentPage={currentPage} />
                 </div>
             )}
             {/* Comment header */}
