@@ -28,7 +28,7 @@ export const getCachedProfile = cache(
     },
 );
 
-export const getCachedPost= cache(
+export const getCachedPost = cache(
     async (paramsPromise: PostPageProps["params"]) => {
         const resolvedParams = await paramsPromise;
         const result = IdParamSchema.safeParse(resolvedParams["post-id"]);
@@ -48,3 +48,15 @@ export const getCachedPost= cache(
         return post;
     },
 );
+
+export const getDeploymentURL = () => {
+    if (process.env.VERCEL_ENV === "production") {
+        return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL || "social-media-app-gules-nine.vercel.app"}`;
+    }
+
+    if (process.env.VERCEL_URL) {
+        return `https://${process.env.VERCEL_URL}`;
+    }
+
+    return process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+};

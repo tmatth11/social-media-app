@@ -1,18 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getProfileIds } from "../utils/queries/profiles";
 import { getPostIds } from "../utils/queries/posts";
-
-const getDeploymentURL = () => {
-    if (process.env.VERCEL_ENV === "production") {
-        return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL || "social-media-app-gules-nine.vercel.app"}`;
-    }
-
-    if (process.env.VERCEL_URL) {
-        return `https://${process.env.VERCEL_URL}`;
-    }
-
-    return process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-};
+import { getDeploymentURL } from "@/utils/helpers";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const BASE_URL = getDeploymentURL();
