@@ -74,7 +74,7 @@ export default async function PostCard({
                 {/* Post image */}
                 {post.image_url && (
                     <Image
-                        className="h-[200]"
+                        className="h-[200] object-cover"
                         unoptimized
                         src={post.image_url}
                         alt="Post image"
