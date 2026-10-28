@@ -85,3 +85,13 @@ export async function getProfiles(currentPage: number, query?: string) {
 
     return { data: profiles, error: null };
 }
+
+export async function getProfileIds() {
+    const supabase = await createClient();
+
+    const { data } = await supabase
+        .from("profiles")
+        .select("id");
+    
+    return data || [];
+}
