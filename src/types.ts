@@ -14,7 +14,6 @@ export interface Profile {
     username: string;
     display_name: string;
     avatar_url: string | null;
-    updated_at: string;
 }
 
 export interface EditProfileState {
@@ -29,7 +28,7 @@ export interface CreatePostState {
     errors?: ReturnType<typeof z.treeifyError>;
 }
 
-export type EditPostState =  {
+export type EditPostState = {
     message?: string;
     success?: boolean;
     errors?: ReturnType<typeof z.treeifyError>;
@@ -70,7 +69,7 @@ export interface PostPageProps {
     }>;
     searchParams?: Promise<{
         "comment-box"?: commentBox;
-        "page"?: string;
+        page?: string;
     }>;
 }
 
@@ -93,7 +92,7 @@ export interface Comment {
     };
 }
 
-export type EditCommentState =  {
+export type EditCommentState = {
     message?: string;
     success?: boolean;
     errors?: ReturnType<typeof z.treeifyError>;
@@ -102,4 +101,11 @@ export type EditCommentState =  {
 export interface DeleteCommentState {
     message?: string;
     success?: boolean;
+}
+
+export interface ProfilesPageProps {
+    searchParams: Promise<{
+        page?: string;
+        query?: string;
+    }>;
 }

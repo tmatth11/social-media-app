@@ -1,6 +1,12 @@
 import { createClient } from "@/services/supabase/server";
 import Feed from "../_components/feed";
 import { connection } from "next/server";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Feed",
+    description: "View all posts",
+};
 
 export const instant = false;
 
