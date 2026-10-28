@@ -16,7 +16,8 @@ export default function CommentButton({
     const searchParams = useSearchParams();
     const commentBoxOpen = searchParams.has("comment-box");
 
-    const handleToggle = () => {
+    const handleToggle = (e: React.MouseEvent) => {
+        e.stopPropagation();
         if (commentBoxOpen) {
             push(`/post/${postId}`);
         } else {

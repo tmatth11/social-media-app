@@ -78,7 +78,7 @@ export default function EditPostModal({
         <div className="fixed inset-0 z-50 flex justify-center bg-black/50 p-4">
             <div
                 key={`${post.id}-${isOpen}`}
-                className="bg-container-primary flex w-full max-w-md flex-col rounded-lg p-4 shadow-xl overflow-y-auto"
+                className="bg-container-primary flex w-full max-w-md flex-col rounded-lg p-4 shadow-xl overflow-y-auto h-fit"
             >
                 <div className="flex justify-end">
                     <button

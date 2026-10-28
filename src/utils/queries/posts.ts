@@ -192,3 +192,13 @@ export const getPost = async (postId: string) => {
 
     return { data: formattedPost, error: null };
 };
+
+export async function getPostIds() {
+    const supabase = await createClient();
+
+    const { data } = await supabase
+        .from("posts")
+        .select("id");
+    
+    return data || [];
+}
