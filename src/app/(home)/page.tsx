@@ -1,8 +1,14 @@
 import { createClient } from "@/services/supabase/server";
 import { FileImage, MessageSquare, ThumbsUp } from "lucide-react";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { connection } from "next/server";
+
+export const metadata: Metadata = {
+    title: "Home",
+    description: "Post about anything",
+};
 
 export const instant = false;
 
