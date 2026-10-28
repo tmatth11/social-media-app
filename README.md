@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# social-media-app
 
-## Getting Started
+This is a full-stack web application that allows you to create social media posts containing text and an image, similar to Twitter.
 
-First, run the development server:
+You can try it [here](https://social-media-app-gules-nine.vercel.app/).
+
+<img src="/public/hero-image.png" alt="Header image" width="500" height="500">
+
+## Features
+
+- **Dark Mode**: Users can toggle between a dark mode and a light mode
+- **Image Storage Buckets**: User profile pictures and post images are contained in public storage buckets
+- **User Reactions and Comments**: Users can like, dislike, and comment on any post
+
+## Core Technologies
+
+- **Front End**: Next.js, Tailwind CSS
+- **Back End**: Supabase, PostgreSQL, Server Actions
+- **CI/CD and Deployment**: GitHub Actions, ESLint, Vercel
+
+## Installation
+
+### Prerequisites
+
+In order to run this project locally, you must have the following installed/set up:
+
+- [Node.js](https://nodejs.org/en)
+- pnpm (`npm install -g pnpm`)
+- [Docker Desktop Installation](https://docs.docker.com/desktop) (Necessary for using Supbase CLI)
+
+### Instructions
+
+1. Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/tmatth11/social-media-app.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Navigate to the project's directory
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd social-media-app
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Install dependencies
 
-## Learn More
+```bash
+pnpm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. Open Docker Desktop
+5. Start Supabase services
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm supabase start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+6. Apply existing migrations
 
-## Deploy on Vercel
+```bash
+pnpm supabase db reset
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+7. Create local `.env.local` file
+8. Add this template to the `.env.local` file and insert the necessary values
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+```
+
+9. Start the development server
+
+```bash
+pnpm dev
+```
