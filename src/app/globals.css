@@ -115,6 +115,16 @@ h4 {
     @apply flex items-center gap-2 enabled:cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed;
 }
 
+/* Home page */
+
+.feature {
+    @apply flex flex-1 flex-col items-center gap-1 text-center;
+}
+
+.feature-icon {
+    @apply w-fit rounded-md bg-container-primary p-2 text-center;
+}
+
 /* Links */
 
 .nav-link {
